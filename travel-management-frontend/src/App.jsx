@@ -6,6 +6,8 @@ import AppShell from "./components/layout/AppShell";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 
+/* ================= ADMIN ================= */
+
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import PolicyManagement from "./pages/admin/PolicyManagement";
@@ -16,6 +18,8 @@ import AuditLogs from "./pages/admin/AuditLogs";
 
 import UserManagement from "./pages/admin/UserManagement";
 
+/* ================= EMPLOYEE ================= */
+
 import EmployeeDashboard from "./pages/employee/EmployeeDashboard";
 
 import MyRequests from "./pages/employee/MyRequests";
@@ -23,8 +27,19 @@ import MyRequests from "./pages/employee/MyRequests";
 import ExpenseManagement from "./pages/employee/ExpenseManagement";
 
 import Profile from "./pages/employee/Profile";
-          
+
+/* ================= MANAGER ================= */
+
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
+
+import ManagerRequests from "./pages/manager/ManagerRequests";
+
+import ManagerApprovals from "./pages/manager/ManagerApprovals";
+
+import TeamActivity from "./pages/manager/TeamActivity";
+
+
+/* ================= FINANCE ================= */
 
 import FinanceDashboard from "./pages/finance/FinanceDashboard";
 
@@ -34,13 +49,13 @@ function App() {
 
     <Routes>
 
-      {/* LOGIN */}
+      {/* ================= LOGIN ================= */}
       <Route
         path="/"
         element={<LoginPage />}
       />
 
-      {/* ADMIN */}
+      {/* ================= ADMIN ================= */}
       <Route
         path="/admin"
         element={
@@ -63,23 +78,23 @@ function App() {
         />
 
         <Route
-          path="/admin/policies"
+          path="policies"
           element={<PolicyManagement />}
         />
 
         <Route
-          path="/admin/reports"
+          path="reports"
           element={<Reports />}
         />
-    
+
         <Route
-          path="/admin/audit-logs"
+          path="audit-logs"
           element={<AuditLogs />}
         />
 
       </Route>
 
-      {/* EMPLOYEE */}
+      {/* ================= EMPLOYEE ================= */}
       <Route
         path="/employee"
         element={
@@ -113,7 +128,7 @@ function App() {
 
       </Route>
 
-      {/* MANAGER */}
+      {/* ================= MANAGER ================= */}
       <Route
         path="/manager"
         element={
@@ -125,14 +140,33 @@ function App() {
         }
       >
 
+        {/* DASHBOARD */}
         <Route
           path="dashboard"
           element={<ManagerDashboard />}
         />
 
+        {/* REQUEST MANAGEMENT */}
+        <Route
+          path="requests"
+          element={<ManagerRequests />}
+        />
+
+        {/* APPROVAL HISTORY */}
+        <Route
+          path="approvals"
+          element={<ManagerApprovals />}
+        />
+
+        {/* TEAM ACTIVITY */}
+        <Route
+          path="team"
+          element={<TeamActivity />}
+        />
+
       </Route>
 
-      {/* FINANCE */}
+      {/* ================= FINANCE ================= */}
       <Route
         path="/finance"
         element={
