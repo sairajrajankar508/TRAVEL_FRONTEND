@@ -1,309 +1,242 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const Profile = () => {
+  const token = localStorage.getItem("token");
 
-  const token =
-    localStorage.getItem("token");
+  const [profile, setProfile] = useState(null);
+  const [editOpen, setEditOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [profile, setProfile] =
-    useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
-  const [editMode, setEditMode] =
-    useState(false);
-
-  const [form, setForm] =
-    useState({
-
-      name: "",
-
-      password: "",
-
-      phone: "",
-
-    });
-
-  // FETCH PROFILE
-  const fetchProfile = async () => {
-
+  // ================= FETCH PROFILE =================
+  const fetchProfile = useCallback(async () => {
     try {
+      setLoading(true);
 
-      const res =
-        await fetch(
-          "http://localhost:8080/employee/profile",
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`,
-            },
-          }
-        );
+      const res = await fetch("http://localhost:8080/employee/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const data =
-        await res.json();
+      if (!res.ok) throw new Error(await res.text());
+
+      const data = await res.json();
 
       setProfile(data);
 
       setForm({
-
-        name: data.name,
-
-        phone: data.phone || "",
-
+        name: data?.name || "",
+        email: data?.email || "",
         password: "",
-
       });
 
     } catch (err) {
-
-      console.log(err);
-
+      console.log("Profile error:", err);
+    } finally {
+      setLoading(false);
     }
-
-  };
+  }, [token]);
 
   useEffect(() => {
-
-  const fetchData = async () => {
+  const loadProfile = async () => {
     await fetchProfile();
   };
 
-  fetchData();
+  loadProfile();
+}, [fetchProfile]);
 
-},);
-
-  // HANDLE INPUT
+  // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
+    const { name, value } = e.target;
 
-    setForm({
-
-      ...form,
-
-      [e.target.name]:
-        e.target.value,
-
-    });
-
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // UPDATE PROFILE
-  const handleUpdate = async (
-    e
-  ) => {
-
+  // ================= UPDATE PROFILE =================
+  const updateProfile = async (e) => {
     e.preventDefault();
 
     try {
-
-      const res =
-        await fetch(
-          "http://localhost:8080/employee/profile",
-          {
-            method: "PUT",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-
-              Authorization:
-                `Bearer ${token}`,
-            },
-
-            body: JSON.stringify(
-              form
-            ),
-
-          }
-        );
-
-      if (!res.ok)
-        throw new Error();
-
-      alert(
-        "Profile updated successfully"
+      const res = await fetch(
+        "http://localhost:8080/employee/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(form),
+        }
       );
 
-      setEditMode(false);
+      const msg = await res.text();
+
+      if (!res.ok) throw new Error(msg);
+
+      alert("Profile updated successfully");
+
+      setEditOpen(false);
 
       fetchProfile();
 
     } catch (err) {
-
       console.log(err);
-
-      alert(
-        "Failed to update profile"
-      );
-
+      alert("Update failed");
     }
-
   };
 
+  // ================= LOADING =================
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-100">
+        <p className="text-slate-600 text-lg">Loading Profile...</p>
+      </div>
+    );
+  }
+
   return (
+    <div className="h-screen bg-slate-100 p-6">
 
-    <div className="min-h-screen bg-slate-100 p-6">
-
-      {/* HEADER */}
-      <div className="bg-white p-6 rounded-2xl shadow flex justify-between items-center">
+      {/* HEADER CARD (LIKE EXPENSE UI) */}
+      <div className="bg-white rounded-3xl shadow-lg border p-6 flex items-center justify-between">
 
         <div>
-
-          <h1 className="text-2xl font-bold">
-
-            👤 My Profile
-
+          <h1 className="text-3xl font-bold text-slate-800">
+            Employee Profile
           </h1>
 
-          <p className="text-gray-500">
-
-            Manage your personal details
-
+          <p className="text-slate-500 mt-1">
+            Manage your account information
           </p>
-
         </div>
 
         <button
-          onClick={() =>
-            setEditMode(
-              !editMode
-            )
-          }
-          className="bg-cyan-600 text-white px-5 py-2 rounded-xl hover:bg-cyan-700"
+          onClick={() => setEditOpen(true)}
+          className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-2xl font-semibold shadow"
         >
-
-          {editMode
-            ? "Cancel"
-            : "Edit Profile"}
-
+          Edit Profile
         </button>
 
       </div>
 
       {/* PROFILE CARD */}
-      <div className="mt-6 bg-white p-6 rounded-2xl shadow max-w-xl">
+      <div className="mt-6 bg-white rounded-3xl shadow-lg border p-6">
 
-        {profile ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <div className="p-4 bg-slate-50 rounded-2xl">
+            <p className="text-slate-500 text-sm">Name</p>
+            <p className="text-xl font-semibold text-slate-800">
+              {profile?.name}
+            </p>
+          </div>
+
+          <div className="p-4 bg-slate-50 rounded-2xl">
+            <p className="text-slate-500 text-sm">Email</p>
+            <p className="text-xl font-semibold text-slate-800">
+              {profile?.email}
+            </p>
+          </div>
+
+          <div className="p-4 bg-slate-50 rounded-2xl">
+            <p className="text-slate-500 text-sm">Role</p>
+            <p className="text-xl font-semibold text-slate-800">
+              {profile?.role}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ================= EDIT MODAL ================= */}
+      {editOpen && (
+        <div className="fixed inset-0 bg-black/40 flex justify-center items-center p-4">
 
           <form
-            onSubmit={
-              handleUpdate
-            }
-            className="space-y-4"
+            onSubmit={updateProfile}
+            className="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-6"
           >
 
+            <h2 className="text-2xl font-bold mb-5 text-slate-800">
+              Edit Profile
+            </h2>
+
             {/* NAME */}
-            <div>
-
-              <label className="text-sm text-gray-500">
-
-                Name
-
-              </label>
-
+            <div className="mb-4">
+              <label className="text-sm font-semibold">Name</label>
               <input
+                type="text"
                 name="name"
                 value={form.name}
-                disabled={!editMode}
-                onChange={
-                  handleChange
-                }
+                onChange={handleChange}
                 className="w-full border p-3 rounded-xl mt-1"
               />
-
             </div>
 
             {/* EMAIL */}
-            <div>
-
-              <label className="text-sm text-gray-500">
-
-                Email
-
-              </label>
-
+            <div className="mb-4">
+              <label className="text-sm font-semibold">Email</label>
               <input
-                value={
-                  profile.email
-                }
-                disabled
-                className="w-full border p-3 rounded-xl mt-1 bg-gray-100"
-              />
-
-            </div>
-
-            {/* PHONE */}
-            <div>
-
-              <label className="text-sm text-gray-500">
-
-                Phone
-
-              </label>
-
-              <input
-                name="phone"
-                value={form.phone}
-                disabled={!editMode}
-                onChange={
-                  handleChange
-                }
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
                 className="w-full border p-3 rounded-xl mt-1"
               />
-
             </div>
 
             {/* PASSWORD */}
-            {editMode && (
+            <div className="mb-4">
+              <label className="text-sm font-semibold">
+                New Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-xl mt-1"
+                placeholder="Leave empty if not changing"
+              />
+            </div>
 
-              <div>
+            {/* BUTTONS */}
+            <div className="flex justify-end gap-3 mt-6">
 
-                <label className="text-sm text-gray-500">
-
-                  New Password
-
-                </label>
-
-                <input
-                  name="password"
-                  type="password"
-                  value={
-                    form.password
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full border p-3 rounded-xl mt-1"
-                />
-
-              </div>
-
-            )}
-
-            {/* BUTTON */}
-            {editMode && (
+              <button
+                type="button"
+                onClick={() => setEditOpen(false)}
+                className="px-5 py-2 border rounded-xl"
+              >
+                Cancel
+              </button>
 
               <button
                 type="submit"
-                className="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700"
+                className="px-5 py-2 bg-cyan-600 text-white rounded-xl"
               >
-
-                Update Profile
-
+                Update
               </button>
 
-            )}
+            </div>
 
           </form>
 
-        ) : (
-
-          <p>Loading...</p>
-
-        )}
-
-      </div>
+        </div>
+      )}
 
     </div>
   );
 };
 
-export default Profile; 
+export default Profile;
