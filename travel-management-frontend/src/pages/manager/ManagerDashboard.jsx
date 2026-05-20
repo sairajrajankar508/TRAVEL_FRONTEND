@@ -102,23 +102,7 @@ const ManagerDashboard = () => {
 
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-blue-100 p-6">
 
-      {/* PAGE TITLE */}
-      <div className="mb-8">
-
-        <h1 className="text-3xl font-bold text-slate-800">
-
-          Manager Dashboard
-
-        </h1>
-
-        <p className="text-slate-500 mt-1">
-
-          Monitor and manage employee travel requests
-
-        </p>
-
-      </div>
-
+      
       {/* STATS CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
 

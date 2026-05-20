@@ -6,6 +6,8 @@ import AdminSidebar from "./AdminSidebar";
 
 import EmployeeSidebar from "./EmployeeSidebar";
 
+import ManagerSidebar from "./ManagerSidebar";
+
 const AppShell = () => {
 
   const role =
@@ -25,6 +27,10 @@ const AppShell = () => {
         {role === "EMPLOYEE" && (
           <EmployeeSidebar />
         )}
+
+       {role === "MANAGER" && (
+        <ManagerSidebar />
+      )} 
 
       </div>
 

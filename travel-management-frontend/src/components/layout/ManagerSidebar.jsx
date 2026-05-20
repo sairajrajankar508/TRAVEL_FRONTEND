@@ -136,26 +136,7 @@ const ManagerSidebar = () => {
 
       </div>
 
-      {/* ================= FOOTER ================= */}
-      <div className="mt-auto p-4 border-t border-cyan-800">
-
-        <div className="bg-cyan-950 rounded-xl p-3">
-
-          <p className="text-xs text-cyan-300">
-            Travel Management System
-          </p>
-
-          <p className="text-sm font-semibold mt-1">
-            Manager Module
-          </p>
-
-          <p className="text-xs text-cyan-400 mt-2">
-            Version 1.0
-          </p>
-
-        </div>
-
-      </div>
+      
 
     </div>
   );
