@@ -50,6 +50,12 @@ import ManagerPolicies from "./pages/manager/ManagerPolicies";
 
 import FinanceDashboard from "./pages/finance/FinanceDashboard";
 
+import ExpenseApproval from "./pages/finance/ExpenseApproval";
+
+import Reimbursements from "./pages/finance/Reimbursements";
+
+import PaymentHistory from "./pages/finance/PaymentHistory";
+
 function App() {
 
   return (
@@ -212,6 +218,21 @@ function App() {
         <Route
           path="dashboard"
           element={<FinanceDashboard />}
+        />
+
+        <Route
+          path="expenses"
+          element={<ExpenseApproval />}
+        />
+
+        <Route
+          path="reimbursements"
+          element={<Reimbursements />}
+        />
+
+        <Route
+          path="history"
+          element={<PaymentHistory />}
         />
 
       </Route>
