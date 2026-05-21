@@ -12,39 +12,37 @@ const ApprovalModal = ({
   const [loading, setLoading] =
     useState(false);
 
-  // SUBMIT REVIEW
-  const submitReview = async () => {
+  if (!request) return null;
 
-    setLoading(true);
+  // ================= SUBMIT REVIEW =================
+  const submitReview = async () => {
 
     try {
 
+      setLoading(true);
+
       const res = await fetch(
 
-        `http://localhost:8080/manager/review/${request.id}`,
+        `http://localhost:8080/manager/review/${request.id}?approve=${request.approve}&comment=${encodeURIComponent(comment)}`,
 
         {
           method: "PUT",
-
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-
-          body: JSON.stringify({
-            approve: request.approve,
-            comment,
-          }),
         }
       );
 
       const msg =
         await res.text();
 
+      if (!res.ok) {
+        throw new Error(msg);
+      }
+
       alert(msg);
 
-      refreshRequests();
+      // REFRESH LIST
+      await refreshRequests();
 
+      // CLOSE MODAL
       onClose();
 
     } catch (err) {
@@ -65,43 +63,68 @@ const ApprovalModal = ({
 
       <div className="bg-white rounded-2xl shadow-2xl p-6 w-[450px]">
 
-        {/* TITLE */}
-        <h2 className="text-2xl font-bold text-slate-800 mb-4">
+        {/* HEADER */}
+        <div className="mb-5">
 
-          {request.approve
-            ? "Approve Request"
-            : "Reject Request"}
+          <h2 className="text-2xl font-bold text-slate-800">
 
-        </h2>
+            {request.approve
+              ? "Approve Request"
+              : "Reject Request"}
 
-        {/* DETAILS */}
-        <div className="space-y-2 text-slate-700">
+          </h2>
 
-          <p>
+          <p className="text-slate-500 mt-1">
 
-            <b>Employee:</b>{" "}
-            {request.employeeName}
-
-          </p>
-
-          <p>
-
-            <b>Destination:</b>{" "}
-            {request.destination}
-
-          </p>
-
-          <p>
-
-            <b>Budget:</b> ₹
-            {request.budget}
+            Review employee request
 
           </p>
 
         </div>
 
+        {/* DETAILS */}
+        <div className="bg-slate-50 rounded-xl p-4 mb-5 space-y-2">
+
+          <p>
+            <span className="font-semibold">
+              Employee:
+            </span>
+
+            {" "}
+            {request.employeeName}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Destination:
+            </span>
+
+            {" "}
+            {request.destination}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Purpose:
+            </span>
+
+            {" "}
+            {request.purpose}
+          </p>
+
+          <p>
+            <span className="font-semibold">
+              Budget:
+            </span>
+
+            {" "}
+            ₹ {request.budget}
+          </p>
+
+        </div>
+
         {/* COMMENT */}
-        <div className="mt-5">
+        <div className="mb-5">
 
           <label className="block mb-2 font-medium">
 
@@ -115,18 +138,18 @@ const ApprovalModal = ({
             onChange={(e) =>
               setComment(e.target.value)
             }
-            className="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
             placeholder="Add review comment..."
+            className="w-full border rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
 
         </div>
 
-        {/* BUTTONS */}
-        <div className="flex justify-end gap-3 mt-6">
+        {/* ACTIONS */}
+        <div className="flex justify-end gap-3">
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border hover:bg-slate-100"
+            className="px-4 py-2 border rounded-xl hover:bg-slate-100"
           >
 
             Cancel
@@ -136,7 +159,7 @@ const ApprovalModal = ({
           <button
             onClick={submitReview}
             disabled={loading}
-            className={`px-5 py-2 rounded-xl text-white transition ${
+            className={`px-5 py-2 rounded-xl text-white ${
               request.approve
                 ? "bg-green-500 hover:bg-green-600"
                 : "bg-red-500 hover:bg-red-600"

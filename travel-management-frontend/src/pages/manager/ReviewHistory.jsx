@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 
 import {
-  FaPlaneDeparture,
   FaCheckCircle,
-  FaClock,
   FaTimesCircle,
+  FaHistory,
 } from "react-icons/fa";
 
-const TeamActivity = () => {
+const ReviewHistory = () => {
 
-  const [activities, setActivities] =
+  const [history, setHistory] =
     useState([]);
 
   const [loading, setLoading] =
@@ -18,15 +17,15 @@ const TeamActivity = () => {
   const token =
     localStorage.getItem("token");
 
-  // ================= FETCH DATA =================
+  // ================= FETCH HISTORY =================
   useEffect(() => {
 
-    const fetchActivities = async () => {
+    const fetchHistory = async () => {
 
       try {
 
         const res = await fetch(
-          "http://localhost:8080/manager/team-activity",
+          "http://localhost:8080/manager/approvals",
           {
             headers: {
               Authorization:
@@ -38,7 +37,7 @@ const TeamActivity = () => {
         const data =
           await res.json();
 
-        setActivities(
+        setHistory(
           Array.isArray(data)
             ? data
             : []
@@ -54,33 +53,26 @@ const TeamActivity = () => {
       }
     };
 
-    fetchActivities();
+    fetchHistory();
 
   }, [token]);
 
   // ================= ANALYTICS =================
-  const totalTrips =
-    activities.length;
+  const totalReviewed =
+    history.length;
 
-  const approvedTrips =
-    activities.filter(
-      (a) =>
-        a.status ===
+  const approved =
+    history.filter(
+      (h) =>
+        h.status ===
         "MANAGER_APPROVED"
     ).length;
 
-  const rejectedTrips =
-    activities.filter(
-      (a) =>
-        a.status ===
+  const rejected =
+    history.filter(
+      (h) =>
+        h.status ===
         "REJECTED"
-    ).length;
-
-  const pendingTrips =
-    activities.filter(
-      (a) =>
-        a.status ===
-        "SUBMITTED"
     ).length;
 
   return (
@@ -92,20 +84,20 @@ const TeamActivity = () => {
 
         <h1 className="text-3xl font-bold text-slate-800">
 
-          Team Activity
+          Review History
 
         </h1>
 
         <p className="text-slate-500 mt-2">
 
-          Monitor employee travel activities and approvals
+          Manager approval and rejection audit history
 
         </p>
 
       </div>
 
-      {/* ================= ANALYTICS CARDS ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      {/* ================= ANALYTICS ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 
         {/* TOTAL */}
         <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-cyan-500">
@@ -116,19 +108,19 @@ const TeamActivity = () => {
 
               <p className="text-slate-500">
 
-                Total Trips
+                Total Reviewed
 
               </p>
 
               <h2 className="text-3xl font-bold mt-2">
 
-                {totalTrips}
+                {totalReviewed}
 
               </h2>
 
             </div>
 
-            <FaPlaneDeparture className="text-4xl text-cyan-500" />
+            <FaHistory className="text-4xl text-cyan-500" />
 
           </div>
 
@@ -149,40 +141,13 @@ const TeamActivity = () => {
 
               <h2 className="text-3xl font-bold mt-2">
 
-                {approvedTrips}
+                {approved}
 
               </h2>
 
             </div>
 
             <FaCheckCircle className="text-4xl text-green-500" />
-
-          </div>
-
-        </div>
-
-        {/* PENDING */}
-        <div className="bg-white p-6 rounded-2xl shadow-lg border-l-4 border-yellow-500">
-
-          <div className="flex justify-between items-center">
-
-            <div>
-
-              <p className="text-slate-500">
-
-                Pending
-
-              </p>
-
-              <h2 className="text-3xl font-bold mt-2">
-
-                {pendingTrips}
-
-              </h2>
-
-            </div>
-
-            <FaClock className="text-4xl text-yellow-500" />
 
           </div>
 
@@ -203,7 +168,7 @@ const TeamActivity = () => {
 
               <h2 className="text-3xl font-bold mt-2">
 
-                {rejectedTrips}
+                {rejected}
 
               </h2>
 
@@ -217,76 +182,14 @@ const TeamActivity = () => {
 
       </div>
 
-      {/* ================= RECENT ACTIVITY FEED ================= */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">
-
-        <h2 className="text-xl font-bold text-slate-800 mb-5">
-
-          Recent Team Activities
-
-        </h2>
-
-        <div className="space-y-4">
-
-          {activities.slice(0, 5).map((a) => (
-
-            <div
-              key={a.id}
-              className="flex items-center justify-between border-b pb-3"
-            >
-
-              <div>
-
-                <p className="font-semibold text-slate-700">
-
-                  {a.employeeName}
-
-                </p>
-
-                <p className="text-sm text-slate-500">
-
-                  Submitted travel request to{" "}
-                  <span className="font-medium">
-
-                    {a.destination}
-
-                  </span>
-
-                </p>
-
-              </div>
-
-              <span
-                className={`px-3 py-1 rounded-full text-sm ${
-                  a.status ===
-                  "MANAGER_APPROVED"
-                    ? "bg-green-100 text-green-700"
-                    : a.status ===
-                      "REJECTED"
-                    ? "bg-red-100 text-red-700"
-                    : "bg-yellow-100 text-yellow-700"
-                }`}
-              >
-
-                {a.status}
-
-              </span>
-
-            </div>
-          ))}
-
-        </div>
-
-      </div>
-
-      {/* ================= TEAM TABLE ================= */}
+      {/* ================= TABLE ================= */}
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
 
         <div className="p-6 border-b">
 
           <h2 className="text-xl font-bold text-slate-800">
 
-            Employee Travel Overview
+            Manager Decision Logs
 
           </h2>
 
@@ -297,6 +200,14 @@ const TeamActivity = () => {
           <div className="p-10 text-center">
 
             Loading...
+
+          </div>
+
+        ) : history.length === 0 ? (
+
+          <div className="p-10 text-center text-slate-500">
+
+            No review history found
 
           </div>
 
@@ -334,7 +245,13 @@ const TeamActivity = () => {
 
                 <th className="p-4 text-left">
 
-                  Status
+                  Decision
+
+                </th>
+
+                <th className="p-4 text-left">
+
+                  Manager Comment
 
                 </th>
 
@@ -344,34 +261,34 @@ const TeamActivity = () => {
 
             <tbody>
 
-              {activities.map((a) => (
+              {history.map((h) => (
 
                 <tr
-                  key={a.id}
+                  key={h.id}
                   className="border-t hover:bg-slate-50 transition"
                 >
 
                   <td className="p-4 font-medium">
 
-                    {a.employeeName}
+                    {h.employeeName}
 
                   </td>
 
                   <td className="p-4">
 
-                    {a.destination}
+                    {h.destination}
 
                   </td>
 
                   <td className="p-4">
 
-                    {a.purpose}
+                    {h.purpose}
 
                   </td>
 
                   <td className="p-4">
 
-                    ₹ {a.budget}
+                    ₹ {h.budget}
 
                   </td>
 
@@ -379,19 +296,26 @@ const TeamActivity = () => {
 
                     <span
                       className={`px-3 py-1 rounded-full text-sm ${
-                        a.status ===
+                        h.status ===
                         "MANAGER_APPROVED"
                           ? "bg-green-100 text-green-700"
-                          : a.status ===
-                            "REJECTED"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
+                          : "bg-red-100 text-red-700"
                       }`}
                     >
 
-                      {a.status}
+                      {h.status ===
+                      "MANAGER_APPROVED"
+                        ? "APPROVED"
+                        : "REJECTED"}
 
                     </span>
+
+                  </td>
+
+                  <td className="p-4 text-slate-600">
+
+                    {h.managerComment ||
+                      "No comment"}
 
                   </td>
 
@@ -409,4 +333,4 @@ const TeamActivity = () => {
   );
 };
 
-export default TeamActivity;
+export default ReviewHistory;

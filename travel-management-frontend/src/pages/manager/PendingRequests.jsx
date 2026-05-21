@@ -1,51 +1,56 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const ApprovalModal = ({
-  request,
-  onClose,
-  refreshRequests,
-}) => {
+import ApprovalModal from "./ApprovalModal";
 
-  const [comment, setComment] =
-    useState("");
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaSearch,
+} from "react-icons/fa";
+
+const PendingRequests = () => {
+
+  const [requests, setRequests] =
+    useState([]);
 
   const [loading, setLoading] =
+    useState(true);
+
+  const [openModal, setOpenModal] =
     useState(false);
 
-  // ================= SUBMIT REVIEW =================
-  const submitReview = async () => {
+  const [selectedRequest, setSelectedRequest] =
+    useState(null);
+
+  const [search, setSearch] =
+    useState("");
+
+  // ================= FETCH REQUESTS =================
+  const fetchRequests = async () => {
 
     try {
 
-      setLoading(true);
-
       const res = await fetch(
-
-        `http://localhost:8080/manager/review/${request.id}?approve=${request.approve}&comment=${encodeURIComponent(comment)}`,
-
-        {
-          method: "PUT",
-        }
+        "http://localhost:8080/manager/requests"
       );
 
-      const message =
-        await res.text();
-
       if (!res.ok) {
-        throw new Error(message);
+        throw new Error(
+          "Failed to fetch requests"
+        );
       }
 
-      alert(message);
+      const data = await res.json();
 
-      refreshRequests();
-
-      onClose();
+      setRequests(
+        Array.isArray(data)
+          ? data
+          : []
+      );
 
     } catch (err) {
 
       console.log(err);
-
-      alert("Review failed");
 
     } finally {
 
@@ -53,139 +58,309 @@ const ApprovalModal = ({
     }
   };
 
+  // ================= LOAD =================
+  useEffect(() => {
+
+    const loadData = async () => {
+
+      await fetchRequests();
+    };
+
+    loadData();
+
+  }, []);
+
+  // ================= OPEN MODAL =================
+  const handleReview = (
+    request,
+    approve
+  ) => {
+
+    setSelectedRequest({
+      ...request,
+      approve,
+    });
+
+    setOpenModal(true);
+  };
+
+  // ================= FILTER =================
+  const filteredRequests =
+    requests.filter((r) => {
+
+      const employee =
+        r.employeeName
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
+
+      const destination =
+        r.destination
+          ?.toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
+
+      return employee || destination;
+    });
+
   return (
 
-    <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-blue-100 p-6">
 
-      <div className="bg-white rounded-2xl shadow-2xl w-[500px] p-6">
+      {/* ================= HEADER ================= */}
+      <div className="flex justify-between items-center mb-6">
 
-        {/* ================= HEADER ================= */}
-        <div className="mb-5">
+        <div>
 
-          <h2 className="text-2xl font-bold text-slate-800">
+          <h1 className="text-3xl font-bold text-slate-800">
 
-            {request.approve
-              ? "Approve Request"
-              : "Reject Request"}
+            Pending Requests
 
-          </h2>
+          </h1>
 
           <p className="text-slate-500 mt-1">
 
-            Review employee travel request
+            Review employee travel requests
 
           </p>
 
         </div>
 
-        {/* ================= REQUEST DETAILS ================= */}
-        <div className="bg-slate-50 rounded-xl p-4 mb-5 space-y-2">
+        {/* SEARCH */}
+        <div className="relative">
 
-          <div>
+          <FaSearch className="absolute top-3 left-3 text-slate-400" />
 
-            <span className="font-semibold">
-              Employee:
-            </span>
-
-            {" "}
-            {request.employeeName}
-
-          </div>
-
-          <div>
-
-            <span className="font-semibold">
-              Destination:
-            </span>
-
-            {" "}
-            {request.destination}
-
-          </div>
-
-          <div>
-
-            <span className="font-semibold">
-              Purpose:
-            </span>
-
-            {" "}
-            {request.purpose}
-
-          </div>
-
-          <div>
-
-            <span className="font-semibold">
-              Budget:
-            </span>
-
-            {" "}
-            ₹ {request.budget}
-
-          </div>
-
-        </div>
-
-        {/* ================= COMMENT ================= */}
-        <div className="mb-5">
-
-          <label className="block mb-2 font-semibold text-slate-700">
-
-            Manager Comment
-
-          </label>
-
-          <textarea
-            rows="4"
-            placeholder="Write your comment..."
-            value={comment}
+          <input
+            type="text"
+            placeholder="Search..."
+            value={search}
             onChange={(e) =>
-              setComment(e.target.value)
+              setSearch(e.target.value)
             }
-            className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-cyan-400"
+            className="pl-10 pr-4 py-2 rounded-xl border bg-white shadow-sm outline-none focus:ring-2 focus:ring-cyan-400"
           />
-
-        </div>
-
-        {/* ================= ACTIONS ================= */}
-        <div className="flex justify-end gap-3">
-
-          {/* CANCEL */}
-          <button
-            onClick={onClose}
-            className="px-5 py-2 rounded-xl border hover:bg-slate-100 transition"
-          >
-
-            Cancel
-
-          </button>
-
-          {/* SUBMIT */}
-          <button
-            onClick={submitReview}
-            disabled={loading}
-            className={`px-5 py-2 rounded-xl text-white transition ${
-              request.approve
-                ? "bg-green-500 hover:bg-green-600"
-                : "bg-red-500 hover:bg-red-600"
-            }`}
-          >
-
-            {loading
-              ? "Processing..."
-              : request.approve
-              ? "Approve"
-              : "Reject"}
-
-          </button>
 
         </div>
 
       </div>
 
+      {/* ================= TABLE ================= */}
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+
+        {loading ? (
+
+          <div className="p-10 text-center text-slate-500">
+
+            Loading requests...
+
+          </div>
+
+        ) : (
+
+          <table className="w-full">
+
+            {/* HEADER */}
+            <thead className="bg-slate-100 text-slate-700">
+
+              <tr>
+
+                <th className="p-4 text-left">
+                  Employee
+                </th>
+
+                <th className="p-4 text-left">
+                  Destination
+                </th>
+
+                <th className="p-4 text-left">
+                  Purpose
+                </th>
+
+                <th className="p-4 text-left">
+                  Budget
+                </th>
+
+                <th className="p-4 text-left">
+                  Dates
+                </th>
+
+                <th className="p-4 text-left">
+                  Status
+                </th>
+
+                <th className="p-4 text-center">
+                  Actions
+                </th>
+
+              </tr>
+
+            </thead>
+
+            {/* BODY */}
+            <tbody>
+
+              {filteredRequests.length === 0 ? (
+
+                <tr>
+
+                  <td
+                    colSpan="7"
+                    className="p-8 text-center text-slate-500"
+                  >
+
+                    No pending requests found
+
+                  </td>
+
+                </tr>
+
+              ) : (
+
+                filteredRequests.map((req) => (
+
+                  <tr
+                    key={req.id}
+                    className="border-t hover:bg-slate-50 transition"
+                  >
+
+                    {/* EMPLOYEE */}
+                    <td className="p-4 font-semibold">
+
+                      {req.employeeName}
+
+                    </td>
+
+                    {/* DESTINATION */}
+                    <td className="p-4">
+
+                      {req.destination}
+
+                    </td>
+
+                    {/* PURPOSE */}
+                    <td className="p-4">
+
+                      {req.purpose}
+
+                    </td>
+
+                    {/* BUDGET */}
+                    <td className="p-4">
+
+                      ₹ {req.budget}
+
+                    </td>
+
+                    {/* DATES */}
+                    <td className="p-4">
+
+                      <div className="text-sm">
+
+                        <div>
+                          {req.startDate}
+                        </div>
+
+                        <div className="text-slate-400">
+                          to
+                        </div>
+
+                        <div>
+                          {req.endDate}
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                    {/* STATUS */}
+                    <td className="p-4">
+
+                      <span className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">
+
+                        {req.status}
+
+                      </span>
+
+                    </td>
+
+                    {/* ACTIONS */}
+                    <td className="p-4">
+
+                      <div className="flex justify-center gap-3">
+
+                        {/* APPROVE */}
+                        <button
+                          onClick={() =>
+                            handleReview(
+                              req,
+                              true
+                            )
+                          }
+                          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition"
+                        >
+
+                          <FaCheckCircle />
+
+                          Approve
+
+                        </button>
+
+                        {/* REJECT */}
+                        <button
+                          onClick={() =>
+                            handleReview(
+                              req,
+                              false
+                            )
+                          }
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl flex items-center gap-2 transition"
+                        >
+
+                          <FaTimesCircle />
+
+                          Reject
+
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+                ))
+              )}
+
+            </tbody>
+
+          </table>
+        )}
+
+      </div>
+
+      {/* ================= MODAL ================= */}
+      {openModal &&
+        selectedRequest && (
+
+          <ApprovalModal
+
+            request={selectedRequest}
+
+            onClose={() =>
+              setOpenModal(false)
+            }
+
+            refreshRequests={
+              fetchRequests
+            }
+
+          />
+        )}
+
     </div>
   );
 };
 
-export default ApprovalModal;
+export default PendingRequests;

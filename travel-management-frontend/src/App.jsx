@@ -32,12 +32,19 @@ import Profile from "./pages/employee/Profile";
 
 import ManagerDashboard from "./pages/manager/ManagerDashboard";
 
-import ManagerRequests from "./pages/manager/ManagerRequests";
+import PendingRequests from "./pages/manager/PendingRequests";
 
-import ManagerApprovals from "./pages/manager/ManagerApprovals";
+import ApprovalHistory from "./pages/manager/ApprovalHistory";
 
 import TeamActivity from "./pages/manager/TeamActivity";
 
+import ManagerReports from "./pages/manager/ManagerReports";
+
+import ReviewHistory from "./pages/manager/ReviewHistory";
+
+import ManagerProfile from "./pages/manager/ManagerProfile";
+
+import ManagerPolicies from "./pages/manager/ManagerPolicies";
 
 /* ================= FINANCE ================= */
 
@@ -149,19 +156,43 @@ function App() {
         {/* REQUEST MANAGEMENT */}
         <Route
           path="requests"
-          element={<ManagerRequests />}
+          element={<PendingRequests />}
         />
 
         {/* APPROVAL HISTORY */}
         <Route
           path="approvals"
-          element={<ManagerApprovals />}
+          element={<ApprovalHistory />}
         />
 
         {/* TEAM ACTIVITY */}
         <Route
-          path="team"
+          path="team-activity"
           element={<TeamActivity />}
+        />
+
+        {/* MANAGER REPORTS */}
+        <Route
+          path="reports"
+          element={<ManagerReports />}
+        />
+
+        {/* REVIEW HISTORY */}
+        <Route
+          path="history"
+          element={<ReviewHistory />}
+        />
+
+        {/* MANAGER PROFILE */}
+        <Route
+          path="profile"
+          element={<ManagerProfile />}
+        />
+
+        {/* MANAGER POLICIES */}
+        <Route
+          path="policies"
+          element={<ManagerPolicies />}
         />
 
       </Route>

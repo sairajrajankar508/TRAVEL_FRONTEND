@@ -8,7 +8,7 @@ import {
   FaUsers,
   FaHistory,
   FaFileAlt,
-
+  FaUser
 } from "react-icons/fa";
 
 const ManagerSidebar = () => {
@@ -88,7 +88,7 @@ const ManagerSidebar = () => {
 
         {/* TEAM ACTIVITY */}
         <Link
-          to="/manager/team"
+          to="/manager/team-activity"
           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
             isActive("/manager/team")
               ? "bg-cyan-600 shadow-lg"
@@ -131,6 +131,39 @@ const ManagerSidebar = () => {
           <FaHistory />
 
           Review History
+
+        </Link>
+
+        {/* MANAGER POLICIES */}
+        <Link
+          to="/manager/policies"
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+            isActive("/manager/policies")
+              ? "bg-cyan-600 shadow-lg"
+              : "hover:bg-cyan-800"
+          }`}
+        >
+
+          <FaFileAlt />
+
+          Policies
+
+        </Link>
+
+
+        {/* MANAGER PROFILE */}
+        <Link
+          to="/manager/profile"
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+            isActive("/manager/profile")
+              ? "bg-cyan-600 shadow-lg"
+              : "hover:bg-cyan-800"
+          }`}
+        >
+
+          <FaUser />
+
+          Profile
 
         </Link>
 
