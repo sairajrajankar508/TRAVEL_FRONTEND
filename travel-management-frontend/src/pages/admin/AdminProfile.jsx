@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 
 import {
-  FaUser,
-  FaEnvelope,
   FaUserShield,
+  FaEnvelope,
+  FaUserCog,
   FaEdit,
   FaSave,
+  FaUsers,
   FaPlaneDeparture,
-  FaMoneyBillWave,
+  FaMoneyCheckAlt,
 } from "react-icons/fa";
 
-const EmployeeProfile = () => {
+const AdminProfile = () => {
 
   const token =
     localStorage.getItem("token");
@@ -164,13 +165,13 @@ const EmployeeProfile = () => {
 
         <h1 className="text-3xl font-bold text-slate-800">
 
-          Employee Profile
+          Admin Profile
 
         </h1>
 
         <p className="text-slate-500 mt-2">
 
-          Manage your account and personal information
+          Manage your administrator account settings
 
         </p>
 
@@ -180,14 +181,14 @@ const EmployeeProfile = () => {
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
         {/* TOP SECTION */}
-        <div className="bg-gradient-to-r from-indigo-700 to-blue-700 p-8 text-white">
+        <div className="bg-gradient-to-r from-red-700 to-orange-600 p-8 text-white">
 
           <div className="flex items-center gap-6">
 
             {/* AVATAR */}
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-5xl">
 
-              <FaUser />
+              <FaUserShield />
 
             </div>
 
@@ -200,7 +201,7 @@ const EmployeeProfile = () => {
 
               </h2>
 
-              <p className="mt-2 text-indigo-100">
+              <p className="mt-2 text-red-100">
 
                 {profile?.email}
 
@@ -208,7 +209,7 @@ const EmployeeProfile = () => {
 
               <div className="mt-3 inline-block px-4 py-1 rounded-full bg-white/20 text-sm">
 
-                EMPLOYEE
+                ADMINISTRATOR
 
               </div>
 
@@ -228,9 +229,9 @@ const EmployeeProfile = () => {
               {/* NAME */}
               <div className="flex items-center gap-4">
 
-                <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700">
+                <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-red-700">
 
-                  <FaUser />
+                  <FaUserCog />
 
                 </div>
 
@@ -255,7 +256,7 @@ const EmployeeProfile = () => {
               {/* EMAIL */}
               <div className="flex items-center gap-4">
 
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700">
+                <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-700">
 
                   <FaEnvelope />
 
@@ -298,7 +299,7 @@ const EmployeeProfile = () => {
 
                   <h3 className="text-lg font-semibold">
 
-                    EMPLOYEE
+                    ADMIN
 
                   </h3>
 
@@ -306,7 +307,34 @@ const EmployeeProfile = () => {
 
               </div>
 
-              {/* TRAVEL REQUESTS */}
+              {/* USER MANAGEMENT */}
+              <div className="flex items-center gap-4">
+
+                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700">
+
+                  <FaUsers />
+
+                </div>
+
+                <div>
+
+                  <p className="text-slate-500 text-sm">
+
+                    User Management
+
+                  </p>
+
+                  <h3 className="text-lg font-semibold">
+
+                    Manage Employees & Managers
+
+                  </h3>
+
+                </div>
+
+              </div>
+
+              {/* TRAVEL MANAGEMENT */}
               <div className="flex items-center gap-4">
 
                 <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
@@ -319,13 +347,13 @@ const EmployeeProfile = () => {
 
                   <p className="text-slate-500 text-sm">
 
-                    Travel Access
+                    Travel System
 
                   </p>
 
                   <h3 className="text-lg font-semibold">
 
-                    Request & Track Travel
+                    Manage Travel Policies
 
                   </h3>
 
@@ -333,12 +361,12 @@ const EmployeeProfile = () => {
 
               </div>
 
-              {/* EXPENSE MANAGEMENT */}
+              {/* FINANCE CONTROL */}
               <div className="flex items-center gap-4">
 
                 <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-700">
 
-                  <FaMoneyBillWave />
+                  <FaMoneyCheckAlt />
 
                 </div>
 
@@ -346,13 +374,13 @@ const EmployeeProfile = () => {
 
                   <p className="text-slate-500 text-sm">
 
-                    Expense Access
+                    Finance Monitoring
 
                   </p>
 
                   <h3 className="text-lg font-semibold">
 
-                    Upload & Manage Expenses
+                    Monitor Expenses & Reports
 
                   </h3>
 
@@ -365,7 +393,7 @@ const EmployeeProfile = () => {
                 onClick={() =>
                   setEditMode(true)
                 }
-                className="mt-6 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition"
+                className="mt-6 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl transition"
               >
 
                 <FaEdit />
@@ -404,7 +432,7 @@ const EmployeeProfile = () => {
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
                 />
 
               </div>
@@ -427,7 +455,7 @@ const EmployeeProfile = () => {
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
                 />
 
               </div>
@@ -451,7 +479,7 @@ const EmployeeProfile = () => {
                     handleChange
                   }
                   placeholder="Leave blank if unchanged"
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
                 />
 
               </div>
@@ -495,4 +523,4 @@ const EmployeeProfile = () => {
   );
 };
 
-export default EmployeeProfile;
+export default AdminProfile;

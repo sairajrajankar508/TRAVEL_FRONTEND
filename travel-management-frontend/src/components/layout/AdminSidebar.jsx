@@ -105,6 +105,19 @@ const AdminSidebar = () => {
       Audit Logs
     </Link>
 
+    {/* ADMIN PROFILE */}
+    <Link
+      to="/admin/profile"
+      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+        isActive("/admin/profile")
+          ? "bg-cyan-600 text-white shadow-lg"
+          : "hover:bg-slate-700 text-gray-300"
+      }`}
+    >
+      <FaUserShield />
+      Profile
+    </Link>
+
   </>
 )}
 

@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 
 import {
-  FaUser,
+  FaMoneyCheckAlt,
   FaEnvelope,
   FaUserShield,
   FaEdit,
   FaSave,
-  FaPlaneDeparture,
-  FaMoneyBillWave,
+  FaWallet,
 } from "react-icons/fa";
 
-const EmployeeProfile = () => {
+const FinanceProfile = () => {
 
   const token =
     localStorage.getItem("token");
@@ -31,7 +30,10 @@ const EmployeeProfile = () => {
       password: "",
     });
 
-  // ================= FETCH PROFILE =================
+  // =====================================================
+  // FETCH PROFILE
+  // =====================================================
+
   useEffect(() => {
 
     const fetchProfile = async () => {
@@ -81,7 +83,10 @@ const EmployeeProfile = () => {
 
   }, [token]);
 
-  // ================= HANDLE CHANGE =================
+  // =====================================================
+  // HANDLE INPUT CHANGE
+  // =====================================================
+
   const handleChange = (e) => {
 
     setFormData({
@@ -91,7 +96,10 @@ const EmployeeProfile = () => {
     });
   };
 
-  // ================= UPDATE PROFILE =================
+  // =====================================================
+  // UPDATE PROFILE
+  // =====================================================
+
   const updateProfile = async (e) => {
 
     e.preventDefault();
@@ -128,7 +136,6 @@ const EmployeeProfile = () => {
         ...profile,
         name:
           formData.name,
-
         email:
           formData.email,
       });
@@ -143,13 +150,17 @@ const EmployeeProfile = () => {
     }
   };
 
+  // =====================================================
+  // LOADING
+  // =====================================================
+
   if (loading) {
 
     return (
 
-      <div className="p-10">
+      <div className="p-10 text-lg">
 
-        Loading...
+        Loading profile...
 
       </div>
     );
@@ -159,35 +170,41 @@ const EmployeeProfile = () => {
 
     <div className="min-h-screen bg-slate-100 p-6">
 
-      {/* ================= HEADER ================= */}
+      {/* ===================================================== */}
+      {/* HEADER */}
+      {/* ===================================================== */}
+
       <div className="mb-8">
 
         <h1 className="text-3xl font-bold text-slate-800">
 
-          Employee Profile
+          Finance Profile
 
         </h1>
 
         <p className="text-slate-500 mt-2">
 
-          Manage your account and personal information
+          Manage finance account information
 
         </p>
 
       </div>
 
-      {/* ================= PROFILE CARD ================= */}
+      {/* ===================================================== */}
+      {/* PROFILE CARD */}
+      {/* ===================================================== */}
+
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
         {/* TOP SECTION */}
-        <div className="bg-gradient-to-r from-indigo-700 to-blue-700 p-8 text-white">
+        <div className="bg-gradient-to-r from-emerald-700 to-teal-700 p-8 text-white">
 
           <div className="flex items-center gap-6">
 
             {/* AVATAR */}
             <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-5xl">
 
-              <FaUser />
+              <FaMoneyCheckAlt />
 
             </div>
 
@@ -200,15 +217,15 @@ const EmployeeProfile = () => {
 
               </h2>
 
-              <p className="mt-2 text-indigo-100">
+              <p className="mt-2 text-emerald-100">
 
                 {profile?.email}
 
               </p>
 
-              <div className="mt-3 inline-block px-4 py-1 rounded-full bg-white/20 text-sm">
+              <div className="mt-3 inline-block px-4 py-1 rounded-full bg-white/20 text-sm font-semibold">
 
-                EMPLOYEE
+                FINANCE TEAM
 
               </div>
 
@@ -218,7 +235,10 @@ const EmployeeProfile = () => {
 
         </div>
 
+        {/* ===================================================== */}
         {/* BODY */}
+        {/* ===================================================== */}
+
         <div className="p-8">
 
           {!editMode ? (
@@ -228,9 +248,9 @@ const EmployeeProfile = () => {
               {/* NAME */}
               <div className="flex items-center gap-4">
 
-                <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700">
+                <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-700">
 
-                  <FaUser />
+                  <FaMoneyCheckAlt />
 
                 </div>
 
@@ -238,7 +258,7 @@ const EmployeeProfile = () => {
 
                   <p className="text-slate-500 text-sm">
 
-                    Full Name
+                    Finance Officer
 
                   </p>
 
@@ -298,7 +318,7 @@ const EmployeeProfile = () => {
 
                   <h3 className="text-lg font-semibold">
 
-                    EMPLOYEE
+                    FINANCE
 
                   </h3>
 
@@ -306,39 +326,12 @@ const EmployeeProfile = () => {
 
               </div>
 
-              {/* TRAVEL REQUESTS */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
-
-                  <FaPlaneDeparture />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Travel Access
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Request & Track Travel
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* EXPENSE MANAGEMENT */}
+              {/* RESPONSIBILITY */}
               <div className="flex items-center gap-4">
 
                 <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-700">
 
-                  <FaMoneyBillWave />
+                  <FaWallet />
 
                 </div>
 
@@ -346,13 +339,13 @@ const EmployeeProfile = () => {
 
                   <p className="text-slate-500 text-sm">
 
-                    Expense Access
+                    Responsibility
 
                   </p>
 
                   <h3 className="text-lg font-semibold">
 
-                    Upload & Manage Expenses
+                    Expense & Reimbursement Management
 
                   </h3>
 
@@ -360,12 +353,12 @@ const EmployeeProfile = () => {
 
               </div>
 
-              {/* BUTTON */}
+              {/* EDIT BUTTON */}
               <button
                 onClick={() =>
                   setEditMode(true)
                 }
-                className="mt-6 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition"
+                className="mt-6 flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl transition"
               >
 
                 <FaEdit />
@@ -378,7 +371,10 @@ const EmployeeProfile = () => {
 
           ) : (
 
-            /* ================= EDIT FORM ================= */
+            /* ===================================================== */
+            /* EDIT FORM */
+            /* ===================================================== */
+
             <form
               onSubmit={
                 updateProfile
@@ -404,7 +400,7 @@ const EmployeeProfile = () => {
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
 
               </div>
@@ -427,7 +423,7 @@ const EmployeeProfile = () => {
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
 
               </div>
@@ -451,12 +447,12 @@ const EmployeeProfile = () => {
                     handleChange
                   }
                   placeholder="Leave blank if unchanged"
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
+                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none"
                 />
 
               </div>
 
-              {/* ACTIONS */}
+              {/* ACTION BUTTONS */}
               <div className="flex gap-3 pt-4">
 
                 <button
@@ -495,4 +491,4 @@ const EmployeeProfile = () => {
   );
 };
 
-export default EmployeeProfile;
+export default FinanceProfile;

@@ -6,6 +6,7 @@ import {
   FaFileInvoice,
   FaCheckCircle,
   FaHistory,
+  FaUser,
 } from "react-icons/fa";
 
 const FinanceSidebar = () => {
@@ -117,6 +118,22 @@ const FinanceSidebar = () => {
           <FaFileInvoice />
 
           Reports
+
+        </Link>
+
+        {/* PROFILE */}
+        <Link
+          to="/finance/profile"
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+            isActive("/finance/profile")
+              ? "bg-green-600"
+              : "hover:bg-green-700"
+          }`}
+        >
+
+          <FaUser />
+
+          Profile
 
         </Link>
 

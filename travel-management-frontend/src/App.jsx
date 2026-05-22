@@ -18,6 +18,8 @@ import AuditLogs from "./pages/admin/AuditLogs";
 
 import UserManagement from "./pages/admin/UserManagement";
 
+import AdminProfile from "./pages/admin/AdminProfile";
+
 /* ================= EMPLOYEE ================= */
 
 import EmployeeDashboard from "./pages/employee/EmployeeDashboard";
@@ -55,6 +57,10 @@ import ExpenseApproval from "./pages/finance/ExpenseApproval";
 import Reimbursements from "./pages/finance/Reimbursements";
 
 import PaymentHistory from "./pages/finance/PaymentHistory";
+
+import FinanceReports from "./pages/finance/FinanceReports";
+
+import FinanceProfile from "./pages/finance/FinanceProfile"; 
 
 function App() {
 
@@ -103,6 +109,11 @@ function App() {
         <Route
           path="audit-logs"
           element={<AuditLogs />}
+        />
+
+        <Route
+          path="profile"
+          element={<AdminProfile />}
         />
 
       </Route>
@@ -184,7 +195,7 @@ function App() {
         />
 
         {/* REVIEW HISTORY */}
-        <Route
+        <Route 
           path="history"
           element={<ReviewHistory />}
         />
@@ -233,6 +244,16 @@ function App() {
         <Route
           path="history"
           element={<PaymentHistory />}
+        />
+
+        <Route
+          path="reports"
+          element={<FinanceReports />}
+        />
+
+        <Route
+          path="profile"
+          element={<FinanceProfile />}
         />
 
       </Route>
