@@ -80,7 +80,7 @@ const EmployeeSidebar = () => {
           to="/employee/itinerary/:requestId"
           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
             isActive(
-              "/employee/itinerary"
+              "/employee/itinerary/:requestId"
             )
               ? "bg-cyan-600"
               : "hover:bg-cyan-800"
@@ -131,13 +131,7 @@ const EmployeeSidebar = () => {
 
       </div>
 
-      {/* FOOTER */}
-      <div className="mt-auto p-4 border-t border-cyan-800 text-xs text-cyan-300">
-
-        v1.0 • Employee Module
-
-      </div>
-
+      
     </div>
 
   );

@@ -355,152 +355,179 @@ const MyRequests = () => {
       </div>
 
       {/* TABLE */}
-      <div className="bg-white mt-5 rounded-3xl shadow-lg border border-slate-200 overflow-hidden flex-1 flex flex-col min-h-0">
+<div className="bg-white mt-5 rounded-3xl shadow-lg border border-slate-200 flex-1 flex flex-col h-[75vh] overflow-hidden">
 
-        <div className="px-8 py-5 border-b border-slate-200 flex-shrink-0">
+  {/* ONLY VERTICAL SCROLL */}
+  <div className="flex-1 overflow-y-auto overflow-x-hidden">
 
-          <h2 className="text-2xl font-bold text-slate-800">
+    <table className="w-full table-fixed">
 
-            All Travel Requests
+      {/* HEADINGS */}
+      <thead className="bg-slate-100 sticky top-0 z-10">
 
-          </h2>
+        <tr>
 
-        </div>
+          <th className="p-5 text-center font-bold text-slate-700">
+            Source
+          </th>
 
-        <div className="overflow-auto flex-1">
+          <th className="p-5 text-center font-bold text-slate-700">
+            Destination
+          </th>
 
-          <table className="w-full">
+          <th className="p-5 text-center font-bold text-slate-700">
+            Travel Dates
+          </th>
 
-            <thead className="bg-slate-100 sticky top-0 z-10">
+          <th className="p-5 text-center font-bold text-slate-700">
+            Status
+          </th>
 
-              <tr>
+          <th className="p-5 text-center font-bold text-slate-700">
+            Actions
+          </th>
 
-                <th className="p-4 text-left">Source</th>
+        </tr>
 
-                <th className="p-4 text-left">Destination</th>
+      </thead>
 
-                <th className="p-4 text-left">Purpose</th>
+      {/* BODY */}
+      <tbody>
 
-                <th className="p-4 text-left">Start Date</th>
+        {requests.map((r) => (
 
-                <th className="p-4 text-left">Budget</th>
+          <tr
+            key={r.id}
+            className="hover:bg-slate-50 transition-all duration-200"
+          >
 
-                <th className="p-4 text-left">Status</th>
+            {/* SOURCE */}
+            <td className="p-5 text-center font-medium text-slate-700 break-words">
+              {r.source}
+            </td>
 
-                <th className="p-4 text-left">Actions</th>
+            {/* DESTINATION */}
+            <td className="p-5 text-center font-medium text-slate-700 break-words">
+              {r.destination}
+            </td>
 
-              </tr>
+            {/* TRAVEL DATES */}
+            <td className="p-5 text-center text-slate-600 whitespace-nowrap">
 
-            </thead>
+              <div className="flex flex-col items-center">
 
-            <tbody>
+                <span className="font-medium">
+                  {r.startDate}
+                </span>
 
-              {requests.map((r) => (
+                <span className="text-slate-400 text-sm">
+                  to
+                </span>
 
-                <tr
-                  key={r.id}
-                  className="border-t hover:bg-slate-50 transition"
+                <span className="font-medium">
+                  {r.endDate}
+                </span>
+
+              </div>
+
+            </td>
+
+            {/* STATUS */}
+            <td className="p-5 text-center">
+
+              <span
+                className={`px-4 py-2 rounded-full text-white text-sm font-semibold shadow-sm whitespace-nowrap
+                ${
+                  r.status === "APPROVED" ||
+                  r.status === "MANAGER_APPROVED"
+                    ? "bg-green-500"
+                    : r.status === "REJECTED"
+                    ? "bg-red-500"
+                    : r.status === "SUBMITTED"
+                    ? "bg-blue-500"
+                    : "bg-amber-500"
+                }`}
+              >
+
+                {r.status}
+
+              </span>
+
+            </td>
+
+            {/* ACTIONS */}
+            <td className="p-5">
+
+              <div className="flex justify-center items-center gap-3 whitespace-nowrap">
+
+                {/* VIEW */}
+                <button
+                  onClick={() => {
+
+                    setSelectedRequest(r);
+
+                    setViewOpen(true);
+                  }}
+                  className="w-10 h-10 rounded-xl bg-slate-200 hover:bg-slate-300 transition flex items-center justify-center flex-shrink-0"
                 >
 
-                  <td className="p-4">{r.source}</td>
+                  <FaEye />
 
-                  <td className="p-4">{r.destination}</td>
+                </button>
 
-                  <td className="p-4">{r.purpose}</td>
+                {/* EDIT */}
+                {r.status === "DRAFT" && (
 
-                  <td className="p-4">{r.startDate}</td>
+                  <button
+                    onClick={() => editRequest(r)}
+                    className="w-10 h-10 rounded-xl bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center flex-shrink-0"
+                  >
 
-                  <td className="p-4">₹ {r.budget}</td>
+                    <FaEdit />
 
-                  <td className="p-4">
+                  </button>
 
-                    <span
-                      className={`px-4 py-2 rounded-full text-white text-sm
-                      ${
-                        r.status === "APPROVED"
-                          ? "bg-green-500"
-                          : r.status === "REJECTED"
-                          ? "bg-red-500"
-                          : r.status === "SUBMITTED"
-                          ? "bg-blue-500"
-                          : "bg-amber-500"
-                      }`}
-                    >
+                )}
 
-                      {r.status}
+                {/* DELETE */}
+                <button
+                  onClick={() => deleteRequest(r.id)}
+                  className="w-10 h-10 rounded-xl bg-red-500 hover:bg-red-600 text-white flex items-center justify-center flex-shrink-0"
+                >
 
-                    </span>
+                  <FaTrash />
 
-                  </td>
+                </button>
 
-                  <td className="p-4 flex gap-2">
+                {/* SUBMIT */}
+                {r.status === "DRAFT" && (
 
-                    {/* VIEW */}
-                    <button
-                      onClick={() => {
+                  <button
+                    onClick={() => submitRequest(r.id)}
+                    className="w-10 h-10 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white flex items-center justify-center flex-shrink-0"
+                  >
 
-                        setSelectedRequest(r);
+                    <FaPaperPlane />
 
-                        setViewOpen(true);
-                      }}
-                      className="w-10 h-10 rounded-xl bg-slate-200 hover:bg-slate-300 transition flex items-center justify-center"
-                    >
+                  </button>
 
-                      <FaEye />
+                )}
 
-                    </button>
+              </div>
 
-                    {/* EDIT */}
-                    {r.status === "DRAFT" && (
+            </td>
 
-                      <button
-                        onClick={() => editRequest(r)}
-                        className="w-10 h-10 rounded-xl bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center"
-                      >
+          </tr>
 
-                        <FaEdit />
+        ))}
 
-                      </button>
+      </tbody>
 
-                    )}
+    </table>
 
-                    {/* DELETE */}
-                    <button
-                      onClick={() => deleteRequest(r.id)}
-                      className="w-10 h-10 rounded-xl bg-red-500 hover:bg-red-600 text-white flex items-center justify-center"
-                    >
+  </div>
 
-                      <FaTrash />
-
-                    </button>
-
-                    {/* SUBMIT */}
-                    {r.status === "DRAFT" && (
-
-                      <button
-                        onClick={() => submitRequest(r.id)}
-                        className="w-10 h-10 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white flex items-center justify-center"
-                      >
-
-                        <FaPaperPlane />
-
-                      </button>
-
-                    )}
-
-                  </td>
-
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </div>
+</div>
 
       {/* CREATE / EDIT FORM */}
       {openForm && (

@@ -5,13 +5,7 @@ import {
   FaClock,
   FaCheck,
   FaTimes,
-  FaRoute,
-  FaCalendarAlt,
-  FaMapMarkerAlt,
-  FaSpinner,
 } from "react-icons/fa";
-
-import { useNavigate } from "react-router-dom";
 
 const EmployeeDashboard = () => {
 
@@ -23,9 +17,6 @@ const EmployeeDashboard = () => {
 
   const token =
     localStorage.getItem("token");
-
-  const navigate =
-    useNavigate();
 
   // ================= FETCH DATA =================
   useEffect(() => {
@@ -108,43 +99,12 @@ const EmployeeDashboard = () => {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-blue-100 p-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-cyan-50 to-blue-100 p-6 space-y-8">
 
-      {/* ================= HEADER ================= */}
-      <div className="bg-white rounded-3xl shadow-xl p-8">
-
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-
-          <div>
-
-            <h1 className="text-4xl font-bold text-slate-800">
-
-              Employee Dashboard
-
-            </h1>
-
-            <p className="text-slate-500 mt-3 text-lg">
-
-              Manage your travel requests and itineraries
-
-            </p>
-
-          </div>
-
-          <div className="bg-cyan-100 text-cyan-700 px-6 py-4 rounded-2xl font-bold text-lg shadow-sm flex items-center gap-3">
-
-            <FaPlane />
-
-            Travel Management
-
-          </div>
-
-        </div>
-
-      </div>
+      
 
       {/* ================= STATS ================= */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
 
         <StatCard
           title="Total Requests"
@@ -154,21 +114,21 @@ const EmployeeDashboard = () => {
         />
 
         <StatCard
-          title="Pending"
+          title="Pending Requests"
           value={pending}
           icon={<FaClock />}
           color="yellow"
         />
 
         <StatCard
-          title="Approved"
+          title="Approved Requests"
           value={approved}
           icon={<FaCheck />}
           color="green"
         />
 
         <StatCard
-          title="Rejected"
+          title="Rejected Requests"
           value={rejected}
           icon={<FaTimes />}
           color="red"
@@ -177,104 +137,71 @@ const EmployeeDashboard = () => {
       </div>
 
       {/* ================= REQUEST TABLE ================= */}
-      <div className="bg-white rounded-3xl shadow-xl p-8">
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
-        {/* TOP */}
-        <div className="flex items-center gap-4 mb-8">
+        {/* HEADER */}
+        <div className="p-6 border-b border-slate-200">
 
-          <div className="w-14 h-14 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-700 text-2xl">
+          <h2 className="text-2xl font-bold text-slate-800">
 
-            <FaRoute />
+            My Travel Requests
 
-          </div>
+          </h2>
 
-          <div>
+          <p className="text-slate-500 mt-1">
 
-            <h2 className="text-2xl font-bold text-slate-800">
+            View all submitted travel requests
 
-              My Travel Requests
-
-            </h2>
-
-            <p className="text-slate-500">
-
-              View and manage your submitted requests
-
-            </p>
-
-          </div>
+          </p>
 
         </div>
 
-        {loading ? (
+        {/* TABLE */}
+        <div className="overflow-x-auto">
 
-          <div className="flex justify-center py-16">
+          {loading ? (
 
-            <FaSpinner className="animate-spin text-5xl text-cyan-600" />
+            <div className="p-10 text-center text-slate-500">
 
-          </div>
-
-        ) : requests.length === 0 ? (
-
-          <div className="text-center py-16">
-
-            <div className="w-24 h-24 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400 text-4xl">
-
-              <FaPlane />
+              Loading requests...
 
             </div>
 
-            <h3 className="text-2xl font-bold text-slate-700 mt-6">
+          ) : requests.length === 0 ? (
 
-              No Travel Requests
+            <div className="p-10 text-center text-slate-500">
 
-            </h3>
+              No travel requests found
 
-            <p className="text-slate-500 mt-3">
+            </div>
 
-              Your travel requests will appear here
-
-            </p>
-
-          </div>
-
-        ) : (
-
-          <div className="overflow-x-auto">
+          ) : (
 
             <table className="w-full">
 
               <thead className="bg-slate-100">
 
-                <tr>
+  <tr>
 
-                  <th className="p-5 text-left font-semibold text-slate-700 rounded-l-2xl">
+    <th className="p-5 text-center font-semibold text-slate-700">
+      Destination
+    </th>
 
-                    Destination
+    <th className="p-5 text-center font-semibold text-slate-700">
+      Start Date
+    </th>
 
-                  </th>
+    <th className="p-5 text-center font-semibold text-slate-700">
+      End Date
+    </th>
 
-                  <th className="p-5 text-left font-semibold text-slate-700">
+    <th className="p-5 text-center font-semibold text-slate-700">
+      Status
+    </th>
 
-                    Travel Dates
+  </tr>
 
-                  </th>
-
-                  <th className="p-5 text-left font-semibold text-slate-700">
-
-                    Status
-
-                  </th>
-
-                  <th className="p-5 text-left font-semibold text-slate-700 rounded-r-2xl">
-
-                    Actions
-
-                  </th>
-
-                </tr>
-
-              </thead>
+</thead>
 
               <tbody>
 
@@ -282,31 +209,29 @@ const EmployeeDashboard = () => {
 
                   <tr
                     key={r.id}
-                    className="hover:bg-slate-50 transition-all"
+                    className="hover:bg-slate-50 transition border-t border-slate-100"
                   >
 
                     {/* DESTINATION */}
-                    <td className="p-5">
+                    <td className="p-5 text-center">
 
-                      <div className="flex items-center gap-3">
+                      <div className="flex flex-col items-center">
 
-                        <div className="w-12 h-12 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-700">
-
-                          <FaMapMarkerAlt />
-
-                        </div>
+                        
 
                         <div>
 
-                          <h3 className="font-bold text-slate-800">
+                          <h3 className="font-bold text-slate-800 text-lg">
 
                             {r.destination}
 
                           </h3>
 
-                          <p className="text-sm text-slate-500">
+                          <p className="text-sm text-slate-500 mt-1">
 
-                            Request ID: {r.id}
+                            Request ID:
+                            {" "}
+                            {r.id}
 
                           </p>
 
@@ -316,34 +241,43 @@ const EmployeeDashboard = () => {
 
                     </td>
 
-                    {/* DATES */}
-                    <td className="p-5">
+                    {/* START DATE */}
+                    <td className="p-5 text-center">
 
-                      <div className="flex items-start gap-3">
+                      <div className="flex flex-col items-center">
 
-                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700">
-
-                          <FaCalendarAlt />
-
-                        </div>
 
                         <div>
 
-                          <p className="font-semibold text-slate-700">
+                          
 
-                            Start:
-                            {" "}
-                            {r.startDate || "N/A"}
+                          <h4 className="font-semibold text-slate-800">
 
-                          </p>
+                            {r.startDate}
 
-                          <p className="text-sm text-slate-500 mt-1">
+                          </h4>
 
-                            End:
-                            {" "}
-                            {r.endDate || "N/A"}
+                        </div>
 
-                          </p>
+                      </div>
+
+                    </td>
+
+                    {/* END DATE */}
+                    <td className="p-5 text-center">
+
+                      <div className="flex flex-col items-center">
+
+                        
+                        <div>
+
+                          
+
+                          <h4 className="font-semibold text-slate-800">
+
+                            {r.endDate}
+
+                          </h4>
 
                         </div>
 
@@ -352,22 +286,17 @@ const EmployeeDashboard = () => {
                     </td>
 
                     {/* STATUS */}
-                    <td className="p-5">
+                    <td className="p-5 text-center">
 
+                      
                       <span
                         className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                          r.status ===
-                            "APPROVED" ||
-                          r.status ===
-                            "MANAGER_APPROVED" ||
-                          r.status ===
-                            "FINANCE_APPROVED"
+                          r.status === "APPROVED" ||
+                          r.status === "MANAGER_APPROVED" ||
+                          r.status === "FINANCE_APPROVED"
                             ? "bg-green-100 text-green-700"
-
-                            : r.status ===
-                              "REJECTED"
+                            : r.status === "REJECTED"
                             ? "bg-red-100 text-red-700"
-
                             : "bg-yellow-100 text-yellow-700"
                         }`}
                       >
@@ -375,26 +304,6 @@ const EmployeeDashboard = () => {
                         {r.status}
 
                       </span>
-
-                    </td>
-
-                    {/* ACTIONS */}
-                    <td className="p-5">
-
-                      <button
-                        onClick={() =>
-                          navigate(
-                            `/employee/itinerary/${r.id}`
-                          )
-                        }
-                        className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-105 transition-all text-white px-5 py-3 rounded-2xl shadow-md font-semibold flex items-center gap-3"
-                      >
-
-                        <FaRoute />
-
-                        View Itinerary
-
-                      </button>
 
                     </td>
 
@@ -406,8 +315,9 @@ const EmployeeDashboard = () => {
 
             </table>
 
-          </div>
-        )}
+          )}
+
+        </div>
 
       </div>
 

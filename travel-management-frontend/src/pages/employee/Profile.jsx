@@ -6,14 +6,11 @@ import {
   FaUserShield,
   FaEdit,
   FaSave,
-  FaPlaneDeparture,
-  FaMoneyBillWave,
 } from "react-icons/fa";
 
 const EmployeeProfile = () => {
 
-  const token =
-    localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
   const [profile, setProfile] =
     useState(null);
@@ -122,8 +119,6 @@ const EmployeeProfile = () => {
 
       alert(msg);
 
-      setEditMode(false);
-
       setProfile({
         ...profile,
         name:
@@ -132,6 +127,8 @@ const EmployeeProfile = () => {
         email:
           formData.email,
       });
+
+      setEditMode(false);
 
     } catch (err) {
 
@@ -143,13 +140,18 @@ const EmployeeProfile = () => {
     }
   };
 
+  // ================= LOADING =================
   if (loading) {
 
     return (
 
-      <div className="p-10">
+      <div className="flex items-center justify-center h-screen bg-slate-100">
 
-        Loading...
+        <div className="text-2xl font-bold text-slate-700">
+
+          Loading Profile...
+
+        </div>
 
       </div>
     );
@@ -157,35 +159,66 @@ const EmployeeProfile = () => {
 
   return (
 
-    <div className="min-h-screen bg-slate-100 p-6">
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-slate-100 via-cyan-50 to-blue-100 p-6 flex flex-col gap-6">
 
       {/* ================= HEADER ================= */}
-      <div className="mb-8">
+      <div className="bg-white rounded-3xl shadow-xl p-7 flex items-center justify-between">
 
-        <h1 className="text-3xl font-bold text-slate-800">
+        <div className="flex items-center gap-5">
 
-          Employee Profile
+          <div className="w-20 h-20 rounded-3xl bg-cyan-100 flex items-center justify-center text-cyan-700 text-4xl">
 
-        </h1>
+            <FaUser />
 
-        <p className="text-slate-500 mt-2">
+          </div>
 
-          Manage your account and personal information
+          <div>
 
-        </p>
+            <h1 className="text-4xl font-bold text-slate-800">
+
+              Employee Profile
+
+            </h1>
+
+            <p className="text-slate-500 mt-2 text-lg">
+
+              Manage your account and travel access
+
+            </p>
+
+          </div>
+
+        </div>
+
+        {!editMode && (
+
+          <button
+            onClick={() =>
+              setEditMode(true)
+            }
+            className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-105 transition-all duration-300 text-white px-6 py-4 rounded-2xl shadow-lg font-semibold flex items-center gap-3"
+          >
+
+            <FaEdit />
+
+            Edit Profile
+
+          </button>
+
+        )}
 
       </div>
 
       {/* ================= PROFILE CARD ================= */}
-      <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div className="flex-1 bg-white rounded-3xl shadow-xl overflow-hidden flex flex-col">
 
         {/* TOP SECTION */}
-        <div className="bg-gradient-to-r from-indigo-700 to-blue-700 p-8 text-white">
+        <div className="bg-gradient-to-r from-cyan-700 to-blue-700 p-8 text-white">
 
           <div className="flex items-center gap-6">
 
             {/* AVATAR */}
-            <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-5xl">
+            <div className="w-28 h-28 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center text-6xl border-4 border-white/20">
 
               <FaUser />
 
@@ -194,21 +227,21 @@ const EmployeeProfile = () => {
             {/* INFO */}
             <div>
 
-              <h2 className="text-3xl font-bold">
+              <h2 className="text-4xl font-bold">
 
                 {profile?.name}
 
               </h2>
 
-              <p className="mt-2 text-indigo-100">
+              <p className="mt-3 text-cyan-100 text-lg">
 
                 {profile?.email}
 
               </p>
 
-              <div className="mt-3 inline-block px-4 py-1 rounded-full bg-white/20 text-sm">
+              <div className="mt-4 inline-block px-5 py-2 rounded-full bg-white/20 text-sm font-semibold tracking-wide">
 
-                EMPLOYEE
+                EMPLOYEE ACCESS
 
               </div>
 
@@ -219,162 +252,37 @@ const EmployeeProfile = () => {
         </div>
 
         {/* BODY */}
-        <div className="p-8">
+        <div className="flex-1 overflow-auto p-8">
 
           {!editMode ? (
 
-            <div className="space-y-6">
+            <>
+              {/* ================= INFO GRID ================= */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 
-              {/* NAME */}
-              <div className="flex items-center gap-4">
+                <InfoCard
+                  icon={<FaUser />}
+                  label="Full Name"
+                  value={profile?.name}
+                  color="cyan"
+                />
 
-                <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700">
+                <InfoCard
+                  icon={<FaEnvelope />}
+                  label="Email Address"
+                  value={profile?.email}
+                  color="blue"
+                />
 
-                  <FaUser />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Full Name
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    {profile?.name}
-
-                  </h3>
-
-                </div>
+                <InfoCard
+                  icon={<FaUserShield />}
+                  label="Role"
+                  value="EMPLOYEE"
+                  color="green"
+                />
 
               </div>
-
-              {/* EMAIL */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700">
-
-                  <FaEnvelope />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Email Address
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    {profile?.email}
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* ROLE */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-700">
-
-                  <FaUserShield />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Role
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    EMPLOYEE
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* TRAVEL REQUESTS */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
-
-                  <FaPlaneDeparture />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Travel Access
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Request & Track Travel
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* EXPENSE MANAGEMENT */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-700">
-
-                  <FaMoneyBillWave />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Expense Access
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Upload & Manage Expenses
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* BUTTON */}
-              <button
-                onClick={() =>
-                  setEditMode(true)
-                }
-                className="mt-6 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl transition"
-              >
-
-                <FaEdit />
-
-                Edit Profile
-
-              </button>
-
-            </div>
+            </>
 
           ) : (
 
@@ -383,85 +291,59 @@ const EmployeeProfile = () => {
               onSubmit={
                 updateProfile
               }
-              className="space-y-5"
+              className="max-w-3xl space-y-6"
             >
 
-              {/* NAME */}
-              <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <label className="block mb-2 font-medium">
-
-                  Name
-
-                </label>
-
-                <input
-                  type="text"
+                {/* NAME */}
+                <Input
+                  label="Full Name"
                   name="name"
+                  type="text"
                   value={
                     formData.name
                   }
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
 
-              </div>
-
-              {/* EMAIL */}
-              <div>
-
-                <label className="block mb-2 font-medium">
-
-                  Email
-
-                </label>
-
-                <input
-                  type="email"
+                {/* EMAIL */}
+                <Input
+                  label="Email Address"
                   name="email"
+                  type="email"
                   value={
                     formData.email
                   }
                   onChange={
                     handleChange
                   }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
                 />
 
               </div>
 
               {/* PASSWORD */}
-              <div>
+              <Input
+                label="New Password"
+                name="password"
+                type="password"
+                value={
+                  formData.password
+                }
+                onChange={
+                  handleChange
+                }
+                placeholder="Leave blank if unchanged"
+              />
 
-                <label className="block mb-2 font-medium">
-
-                  New Password
-
-                </label>
-
-                <input
-                  type="password"
-                  name="password"
-                  value={
-                    formData.password
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  placeholder="Leave blank if unchanged"
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-indigo-500 outline-none"
-                />
-
-              </div>
-
-              {/* ACTIONS */}
-              <div className="flex gap-3 pt-4">
+              {/* ACTION BUTTONS */}
+              <div className="flex gap-4 pt-4">
 
                 <button
                   type="submit"
-                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl transition"
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-2xl font-semibold flex items-center gap-3 transition-all"
                 >
 
                   <FaSave />
@@ -475,7 +357,7 @@ const EmployeeProfile = () => {
                   onClick={() =>
                     setEditMode(false)
                   }
-                  className="bg-slate-200 hover:bg-slate-300 px-5 py-3 rounded-xl transition"
+                  className="bg-slate-200 hover:bg-slate-300 text-slate-700 px-6 py-3 rounded-2xl font-semibold transition-all"
                 >
 
                   Cancel
@@ -496,3 +378,91 @@ const EmployeeProfile = () => {
 };
 
 export default EmployeeProfile;
+
+/* ================= REUSABLE INFO CARD ================= */
+
+const InfoCard = ({
+  icon,
+  label,
+  value,
+  color,
+}) => {
+
+  const colors = {
+
+    cyan:
+      "bg-cyan-100 text-cyan-700",
+
+    blue:
+      "bg-blue-100 text-blue-700",
+
+    green:
+      "bg-green-100 text-green-700",
+
+    purple:
+      "bg-purple-100 text-purple-700",
+
+    yellow:
+      "bg-yellow-100 text-yellow-700",
+
+    pink:
+      "bg-pink-100 text-pink-700",
+
+    orange:
+      "bg-orange-100 text-orange-700",
+  };
+
+  return (
+
+    <div className="bg-slate-50 hover:bg-white border border-slate-200 hover:shadow-lg transition-all duration-300 rounded-3xl p-6 flex items-center gap-5">
+
+      <div
+        className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${colors[color]}`}
+      >
+
+        {icon}
+
+      </div>
+
+      <div>
+
+        <p className="text-slate-500 text-sm">
+
+          {label}
+
+        </p>
+
+        <h3 className="text-lg font-bold text-slate-800 mt-1">
+
+          {value}
+
+        </h3>
+
+      </div>
+
+    </div>
+  );
+};
+
+/* ================= REUSABLE INPUT ================= */
+
+const Input = ({
+  label,
+  ...props
+}) => (
+
+  <div>
+
+    <label className="block mb-2 font-semibold text-slate-700">
+
+      {label}
+
+    </label>
+
+    <input
+      {...props}
+      className="w-full border border-slate-300 rounded-2xl p-4 focus:ring-2 focus:ring-cyan-500 outline-none transition-all"
+    />
+
+  </div>
+);
