@@ -12,502 +12,190 @@ import {
 } from "react-icons/fa";
 
 const AdminProfile = () => {
+  const token = localStorage.getItem("token");
 
-  const token =
-    localStorage.getItem("token");
+  const [profile, setProfile] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  const [profile, setProfile] =
-    useState(null);
-
-  const [editMode, setEditMode] =
-    useState(false);
-
-  const [loading, setLoading] =
-    useState(true);
-
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      email: "",
-      password: "",
-    });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   // ================= FETCH PROFILE =================
   useEffect(() => {
-
     const fetchProfile = async () => {
-
       try {
-
         const res = await fetch(
           "http://localhost:8080/employee/profile",
           {
             headers: {
-              Authorization:
-                `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           }
         );
 
-        if (!res.ok) {
-          throw new Error(
-            "Failed to fetch profile"
-          );
-        }
-
-        const data =
-          await res.json();
+        const data = await res.json();
 
         setProfile(data);
 
         setFormData({
-          name:
-            data.name || "",
-          email:
-            data.email || "",
+          name: data.name || "",
+          email: data.email || "",
           password: "",
         });
-
       } catch (err) {
-
         console.log(err);
-
       } finally {
-
         setLoading(false);
       }
     };
 
     fetchProfile();
-
   }, [token]);
 
   // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
-      [e.target.name]:
-        e.target.value,
+      [e.target.name]: e.target.value,
     });
   };
 
   // ================= UPDATE PROFILE =================
   const updateProfile = async (e) => {
-
     e.preventDefault();
 
     try {
-
       const res = await fetch(
         "http://localhost:8080/employee/profile/update",
         {
           method: "PUT",
-
           headers: {
-            "Content-Type":
-              "application/json",
-
-            Authorization:
-              `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-
-          body: JSON.stringify(
-            formData
-          ),
+          body: JSON.stringify(formData),
         }
       );
 
-      const msg =
-        await res.text();
+      const msg = await res.text();
 
       alert(msg);
 
-      setEditMode(false);
-
       setProfile({
         ...profile,
-        name:
-          formData.name,
-
-        email:
-          formData.email,
+        name: formData.name,
+        email: formData.email,
       });
 
+      setEditMode(false);
     } catch (err) {
-
       console.log(err);
-
-      alert(
-        "Profile update failed"
-      );
+      alert("Profile update failed");
     }
   };
 
   if (loading) {
-
     return (
-
-      <div className="p-10">
-
-        Loading...
-
+      <div className="flex items-center justify-center h-[70vh] text-xl font-semibold text-slate-600">
+        Loading Admin Profile...
       </div>
     );
   }
 
   return (
-
-    <div className="min-h-screen bg-slate-100 p-6">
+    <div className="min-h-screen bg-slate-100 p-6 space-y-6">
 
       {/* ================= HEADER ================= */}
-      <div className="mb-8">
-
+      <div className="bg-white rounded-3xl shadow-lg p-6">
         <h1 className="text-3xl font-bold text-slate-800">
-
           Admin Profile
-
         </h1>
-
         <p className="text-slate-500 mt-2">
-
-          Manage your administrator account settings
-
+          Manage your account settings & system access
         </p>
-
       </div>
 
       {/* ================= PROFILE CARD ================= */}
       <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
-        {/* TOP SECTION */}
-        <div className="bg-gradient-to-r from-red-700 to-orange-600 p-8 text-white">
-
+        {/* TOP */}
+        <div className="bg-gradient-to-r from-indigo-700 to-indigo-600 text-white p-8">
           <div className="flex items-center gap-6">
 
-            {/* AVATAR */}
-            <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center text-5xl">
-
+            <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-5xl">
               <FaUserShield />
-
             </div>
 
-            {/* INFO */}
             <div>
-
               <h2 className="text-3xl font-bold">
-
                 {profile?.name}
-
               </h2>
-
-              <p className="mt-2 text-red-100">
-
+              <p className="text-red-100 mt-1">
                 {profile?.email}
-
               </p>
 
-              <div className="mt-3 inline-block px-4 py-1 rounded-full bg-white/20 text-sm">
-
+              <span className="mt-3 inline-block px-4 py-1 bg-white/20 rounded-full text-sm">
                 ADMINISTRATOR
-
-              </div>
-
+              </span>
             </div>
 
           </div>
-
         </div>
 
         {/* BODY */}
         <div className="p-8">
 
           {!editMode ? (
+            <>
+              {/* INFO GRID */}
+              <div className="grid md:grid-cols-2 gap-6">
 
-            <div className="space-y-6">
-
-              {/* NAME */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-red-100 flex items-center justify-center text-red-700">
-
-                  <FaUserCog />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Full Name
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    {profile?.name}
-
-                  </h3>
-
-                </div>
+                <InfoCard icon={<FaUserCog />} label="Full Name" value={profile?.name} color="red" />
+                <InfoCard icon={<FaEnvelope />} label="Email" value={profile?.email} color="orange" />
+                <InfoCard icon={<FaUserShield />} label="Role" value="ADMIN" color="green" />
+                <InfoCard icon={<FaUsers />} label="User Management" value="Employees & Managers" color="blue" />
+                <InfoCard icon={<FaPlaneDeparture />} label="Travel System" value="Policies & Requests" color="purple" />
+                <InfoCard icon={<FaMoneyCheckAlt />} label="Finance" value="Reports & Expenses" color="yellow" />
 
               </div>
 
-              {/* EMAIL */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center text-orange-700">
-
-                  <FaEnvelope />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Email Address
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    {profile?.email}
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* ROLE */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center text-green-700">
-
-                  <FaUserShield />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Role
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    ADMIN
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* USER MANAGEMENT */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-700">
-
-                  <FaUsers />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    User Management
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Manage Employees & Managers
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* TRAVEL MANAGEMENT */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-700">
-
-                  <FaPlaneDeparture />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Travel System
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Manage Travel Policies
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* FINANCE CONTROL */}
-              <div className="flex items-center gap-4">
-
-                <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center text-yellow-700">
-
-                  <FaMoneyCheckAlt />
-
-                </div>
-
-                <div>
-
-                  <p className="text-slate-500 text-sm">
-
-                    Finance Monitoring
-
-                  </p>
-
-                  <h3 className="text-lg font-semibold">
-
-                    Monitor Expenses & Reports
-
-                  </h3>
-
-                </div>
-
-              </div>
-
-              {/* BUTTON */}
+              {/* EDIT BUTTON */}
               <button
-                onClick={() =>
-                  setEditMode(true)
-                }
-                className="mt-6 flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-3 rounded-xl transition"
+                onClick={() => setEditMode(true)}
+                className="mt-8 flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl transition"
               >
-
                 <FaEdit />
-
                 Edit Profile
-
               </button>
-
-            </div>
-
+            </>
           ) : (
-
             /* ================= EDIT FORM ================= */
-            <form
-              onSubmit={
-                updateProfile
-              }
-              className="space-y-5"
-            >
+            <form onSubmit={updateProfile} className="space-y-5">
 
-              {/* NAME */}
-              <div>
+              <Input label="Name" name="name" value={formData.name} onChange={handleChange} />
+              <Input label="Email" name="email" value={formData.email} onChange={handleChange} />
+              <Input label="Password" name="password" type="password" value={formData.password} onChange={handleChange} placeholder="Leave blank if unchanged" />
 
-                <label className="block mb-2 font-medium">
-
-                  Name
-
-                </label>
-
-                <input
-                  type="text"
-                  name="name"
-                  value={
-                    formData.name
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
-                />
-
-              </div>
-
-              {/* EMAIL */}
-              <div>
-
-                <label className="block mb-2 font-medium">
-
-                  Email
-
-                </label>
-
-                <input
-                  type="email"
-                  name="email"
-                  value={
-                    formData.email
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
-                />
-
-              </div>
-
-              {/* PASSWORD */}
-              <div>
-
-                <label className="block mb-2 font-medium">
-
-                  New Password
-
-                </label>
-
-                <input
-                  type="password"
-                  name="password"
-                  value={
-                    formData.password
-                  }
-                  onChange={
-                    handleChange
-                  }
-                  placeholder="Leave blank if unchanged"
-                  className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
-                />
-
-              </div>
-
-              {/* ACTIONS */}
               <div className="flex gap-3 pt-4">
 
                 <button
                   type="submit"
-                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl transition"
+                  className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl"
                 >
-
                   <FaSave />
-
                   Save Changes
-
                 </button>
 
                 <button
                   type="button"
-                  onClick={() =>
-                    setEditMode(false)
-                  }
-                  className="bg-slate-200 hover:bg-slate-300 px-5 py-3 rounded-xl transition"
+                  onClick={() => setEditMode(false)}
+                  className="bg-slate-200 hover:bg-slate-300 px-5 py-3 rounded-xl"
                 >
-
                   Cancel
-
                 </button>
 
               </div>
@@ -518,9 +206,49 @@ const AdminProfile = () => {
         </div>
 
       </div>
-
     </div>
   );
 };
 
 export default AdminProfile;
+
+/* ================= REUSABLE COMPONENTS ================= */
+
+const InfoCard = ({ icon, label, value, color }) => {
+
+  const colors = {
+    red: "bg-red-100 text-red-700",
+    orange: "bg-orange-100 text-orange-700",
+    green: "bg-green-100 text-green-700",
+    blue: "bg-blue-100 text-blue-700",
+    purple: "bg-purple-100 text-purple-700",
+    yellow: "bg-yellow-100 text-yellow-700",
+  };
+
+  return (
+    <div className="flex items-center gap-4 p-5 rounded-2xl hover:shadow-md transition">
+
+      <div className={`w-12 h-12 flex items-center justify-center rounded-xl ${colors[color]}`}>
+        {icon}
+      </div>
+
+      <div>
+        <p className="text-slate-500 text-sm">{label}</p>
+        <h3 className="font-semibold text-slate-800">{value}</h3>
+      </div>
+
+    </div>
+  );
+};
+
+const Input = ({ label, ...props }) => (
+  <div>
+    <label className="block mb-2 font-medium text-slate-700">
+      {label}
+    </label>
+    <input
+      {...props}
+      className="w-full border rounded-xl p-3 focus:ring-2 focus:ring-red-500 outline-none"
+    />
+  </div>
+);

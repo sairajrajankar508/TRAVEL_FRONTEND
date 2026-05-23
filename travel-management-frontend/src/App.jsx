@@ -26,6 +26,8 @@ import EmployeeDashboard from "./pages/employee/EmployeeDashboard";
 
 import MyRequests from "./pages/employee/MyRequests";
 
+import Itinerary from "./pages/employee/Itinerary"; 
+
 import ExpenseManagement from "./pages/employee/ExpenseManagement";
 
 import Profile from "./pages/employee/Profile";
@@ -145,10 +147,17 @@ function App() {
           element={<ExpenseManagement />}
         />
 
+<Route
+  path="itinerary/:requestId"
+  element={<Itinerary />}
+/>
+
         <Route
           path="profile"
           element={<Profile />}
         />
+
+        
 
       </Route>
 

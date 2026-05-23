@@ -18,7 +18,7 @@ const AdminSidebar = () => {
 
   return (
 
-    <div className="w-64 h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white p-5 shadow-2xl">
+    <div className="w-64 h-screen bg-gradient-to-b from-indigo-900 to-indigo-800 text-white p-5 shadow-2xl">
 
       {/* LOGO SECTION */}
       <div className="mb-10">
@@ -45,7 +45,7 @@ const AdminSidebar = () => {
       to="/admin/dashboard"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/dashboard")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -58,7 +58,7 @@ const AdminSidebar = () => {
       to="/admin/users"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/users")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -71,7 +71,7 @@ const AdminSidebar = () => {
       to="/admin/policies"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/policies")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -84,7 +84,7 @@ const AdminSidebar = () => {
       to="/admin/reports"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/reports")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -97,7 +97,7 @@ const AdminSidebar = () => {
       to="/admin/audit-logs"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/audit-logs")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -110,7 +110,7 @@ const AdminSidebar = () => {
       to="/admin/profile"
       className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
         isActive("/admin/profile")
-          ? "bg-cyan-600 text-white shadow-lg"
+          ? "bg-indigo-600 text-white shadow-lg"
           : "hover:bg-slate-700 text-gray-300"
       }`}
     >
@@ -128,7 +128,7 @@ const AdminSidebar = () => {
             to="/employee/dashboard"
             className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
               isActive("/employee/dashboard")
-                ? "bg-cyan-600 text-white"
+                ? "bg-indigo-600 text-white"
                 : "hover:bg-slate-700 text-gray-300"
             }`}
           >
@@ -144,7 +144,7 @@ const AdminSidebar = () => {
             to="/manager/dashboard"
             className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
               isActive("/manager/dashboard")
-                ? "bg-cyan-600 text-white"
+                ? "bg-indigo-600 text-white"
                 : "hover:bg-slate-700 text-gray-300"
             }`}
           >
@@ -160,7 +160,7 @@ const AdminSidebar = () => {
             to="/finance/dashboard"
             className={`flex items-center gap-3 px-4 py-2 rounded-lg transition ${
               isActive("/finance/dashboard")
-                ? "bg-cyan-600 text-white"
+                ? "bg-indigo-600 text-white"
                 : "hover:bg-slate-700 text-gray-300"
             }`}
           >

@@ -76,6 +76,23 @@ const EmployeeSidebar = () => {
 
         </Link>
 
+        <Link
+          to="/employee/itinerary/:requestId"
+          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+            isActive(
+              "/employee/itinerary"
+            )
+              ? "bg-cyan-600"
+              : "hover:bg-cyan-800"
+          }`}
+        >
+
+          <FaFileAlt />
+
+          Itinerary
+
+        </Link>
+
         {/* EXPENSES */}
         <Link
           to="/employee/expenses"

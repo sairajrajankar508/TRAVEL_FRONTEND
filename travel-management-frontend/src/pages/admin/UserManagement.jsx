@@ -3,40 +3,42 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 
 import {
+  FaUsers,
+  FaUserShield,
+  FaEnvelope,
+  FaBuilding,
+  FaTrash,
+  FaPlus,
+  FaUserTie,
+  FaMoneyBillWave,
+} from "react-icons/fa";
 
+import {
   useGetAllUsersQuery,
-
   useDeleteUserMutation,
-
+  useToggleUserStatusMutation,
 } from "../../services/adminApi";
 
 import AddUserModal from "./AddUserModal";
 
-import EditUserModal from "./EditUserModal";
 
 const UserManagement = () => {
 
   const [showModal, setShowModal] =
     useState(false);
 
-  const [selectedUser, setSelectedUser] =
-    useState(null);
-
-  const [showEditModal, setShowEditModal] =
-    useState(false);
-
   const {
-
     data: users = [],
-
     isLoading,
-
   } = useGetAllUsersQuery();
 
   const [deleteUser] =
     useDeleteUserMutation();
 
-  // DELETE USER
+  const [toggleUserStatus] =
+    useToggleUserStatusMutation();
+
+  // ================= DELETE USER =================
   const handleDelete = async (id) => {
 
     try {
@@ -57,20 +59,25 @@ const UserManagement = () => {
     }
   };
 
-  // STATS
-  const activeUsers =
-    users.filter(
-      (u) => u.active
-    ).length;
-
-  const disabledUsers =
-    users.filter(
-      (u) => !u.active
-    ).length;
-
+  // ================= STATS =================
   const admins =
     users.filter(
       (u) => u.role === "ADMIN"
+    ).length;
+
+  const employeeUsers =
+    users.filter(
+      (u) => u.role === "EMPLOYEE"
+    ).length;
+
+  const managerUsers =
+    users.filter(
+      (u) => u.role === "MANAGER"
+    ).length;
+
+  const financeUsers =
+    users.filter(
+      (u) => u.role === "FINANCE"
     ).length;
 
   if (isLoading) {
@@ -80,7 +87,9 @@ const UserManagement = () => {
       <div className="flex items-center justify-center h-[70vh]">
 
         <h1 className="text-3xl font-bold text-slate-700 animate-pulse">
+
           Loading Users...
+
         </h1>
 
       </div>
@@ -91,18 +100,22 @@ const UserManagement = () => {
 
     <div className="space-y-6">
 
-      {/* HEADER */}
-      <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 flex justify-between items-center">
+      {/* ================= HEADER ================= */}
+      <div className="bg-white rounded-3xl shadow-lg border border-slate-200 p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
 
         <div>
 
           <h1 className="text-3xl font-bold text-slate-800">
+
             User Management
+
           </h1>
 
           <p className="text-gray-500 mt-2">
+
             Manage employees, managers,
             finance and admin accounts
+
           </p>
 
         </div>
@@ -111,84 +124,215 @@ const UserManagement = () => {
           onClick={() =>
             setShowModal(true)
           }
-          className="bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-105 transition-all text-white px-6 py-3 rounded-2xl shadow-lg font-semibold"
+          className="flex items-center gap-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:scale-105 transition-all text-white px-6 py-3 rounded-2xl shadow-lg font-semibold"
         >
-          + Add User
+
+          <FaPlus />
+
+          Add User
+
         </button>
 
       </div>
 
-      {/* STATS */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-5 ">
+      {/* ================= STATS ================= */}
+      <div className="space-y-6">
 
-        {/* TOTAL */}
-        <div className="bg-white rounded-2xl shadow-md p-5 hover:scale-105 transition">
-          
-          <h2 className="text-gray-500 font-medium">
-            Total Users
-          </h2>
+        {/* TOP 3 CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          <h1 className="text-4xl font-bold text-slate-800 mt-2">
-            {users.length}
-          </h1>
+          {/* TOTAL USERS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 hover:shadow-2xl transition">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-500 font-medium">
+
+                  Total Users
+
+                </p>
+
+                <h1 className="text-4xl font-bold text-slate-800 mt-3">
+
+                  {users.length}
+
+                </h1>
+
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-blue-100 flex items-center justify-center text-blue-700 text-3xl">
+
+                <FaUsers />
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* ADMIN USERS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 hover:shadow-2xl transition">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-500 font-medium">
+
+                  Admin Accounts
+
+                </p>
+
+                <h1 className="text-4xl font-bold text-slate-800 mt-3">
+
+                  {admins}
+
+                </h1>
+
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center text-purple-700 text-3xl">
+
+                <FaUserShield />
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* EMPLOYEE USERS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 hover:shadow-2xl transition">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-500 font-medium">
+
+                  Employee Accounts
+
+                </p>
+
+                <h1 className="text-4xl font-bold text-slate-800 mt-3">
+
+                  {employeeUsers}
+
+                </h1>
+
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-cyan-100 flex items-center justify-center text-cyan-700 text-3xl">
+
+                <FaUsers />
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 
-        {/* ACTIVE */}
-        <div className="bg-white rounded-2xl shadow-md p-5 hover:scale-105 transition">
+        {/* BOTTOM 2 CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          <h2 className="text-gray-500 font-medium">
-            Active Users
-          </h2>
+          {/* MANAGER USERS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 hover:shadow-2xl transition">
 
-          <h1 className="text-4xl font-bold mt-2">
-            {activeUsers}
-          </h1>
+            <div className="flex justify-between items-center">
 
-        </div>
+              <div>
 
-        {/* DISABLED */}
-        <div className="bg-white rounded-2xl shadow-md p-5 hover:scale-105 transition">
+                <p className="text-slate-500 font-medium">
 
-          <h2 className="text-gray-500 font-medium">
-            Disabled Users
-          </h2>
+                  Manager Accounts
 
-          <h1 className="text-4xl font-bold mt-2">
-            {disabledUsers}
-          </h1>
+                </p>
 
-        </div>
+                <h1 className="text-4xl font-bold text-slate-800 mt-3">
 
-        {/* ADMINS */}
-        <div className="bg-white rounded-2xl shadow-md p-5 hover:scale-105 transition">
+                  {managerUsers}
 
-          <h2 className="text-gray-500 font-medium">
-            Admin Accounts
-          </h2>
+                </h1>
 
-          <h1 className="text-4xl font-bold mt-2">
-            {admins}
-          </h1>
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-yellow-100 flex items-center justify-center text-yellow-700 text-3xl">
+
+                <FaUserTie />
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* FINANCE USERS */}
+          <div className="bg-white rounded-3xl shadow-lg p-6 border border-slate-100 hover:shadow-2xl transition">
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <p className="text-slate-500 font-medium">
+
+                  Finance Accounts
+
+                </p>
+
+                <h1 className="text-4xl font-bold text-slate-800 mt-3">
+
+                  {financeUsers}
+
+                </h1>
+
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-green-100 flex items-center justify-center text-green-700 text-3xl">
+
+                <FaMoneyBillWave />
+
+              </div>
+
+            </div>
+
+          </div>
 
         </div>
 
       </div>
 
-      {/* USERS TABLE */}
-      <div className="bg-white rounded-3xl shadow-lg  border-slate-200">
+      {/* ================= USERS TABLE ================= */}
+      <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
 
         {/* TABLE HEADER */}
-        <div className="p-6 border-b flex justify-between items-center">
+        <div className="p-7 border-b border-slate-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
           <div>
 
-            <h2 className="text-xl font-semibold text-slate-700">
+            <h2 className="text-2xl font-bold text-slate-800">
+
               System Users
+
             </h2>
 
-            <p className="text-gray-500 text-sm mt-1">
-              All registered platform users
+            <p className="text-slate-500 mt-1">
+
+              Manage all registered platform users
+
+            </p>
+
+          </div>
+
+          <div className="bg-slate-100 px-5 py-3 rounded-2xl">
+
+            <p className="text-slate-600 font-semibold">
+
+              {users.length} Registered Users
+
             </p>
 
           </div>
@@ -196,220 +340,266 @@ const UserManagement = () => {
         </div>
 
         {/* TABLE */}
-        <table className="w-full">
+        <div className="overflow-x-auto">
 
-          <thead className="bg-slate-100">
+          <table className="w-full">
 
-            <tr>
+            <thead className="bg-slate-100">
 
-              <th className="text-left p-5">
-                User
-              </th>
+  <tr>
 
-              <th className="text-left p-5">
-                Email
-              </th>
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-              <th className="text-left p-5">
-                Role
-              </th>
+      User
 
-              <th className="text-left p-5">
-                Department
-              </th>
+    </th>
 
-              <th className="text-left p-5">
-                Status
-              </th>
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-              <th className="text-left p-5">
-                Actions
-              </th>
+      Email
 
-            </tr>
+    </th>
 
-          </thead>
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-          <tbody>
+      Role
 
-            {users.map((user) => (
+    </th>
 
-              <tr
-                key={user.id}
-                className="border-t hover:bg-slate-50 transition"
-              >
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-                {/* USER */}
-                <td className="p-5">
+      Department
 
-                  <div className="flex items-center gap-3">
+    </th>
 
-                    
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-                    <div>
+      Status
 
-                      <h3 className="font-semibold text-slate-700">
-                        {user.name}
-                      </h3>
+    </th>
 
-                      <p className="text-sm text-gray-400">
-                        User ID: {user.id}
-                      </p>
+    <th className="text-center p-5 font-semibold text-slate-700">
 
-                    </div>
+      Actions
 
-                  </div>
+    </th>
 
-                </td>
+  </tr>
 
-                {/* EMAIL */}
-                <td className="p-5 text-slate-600">
-                  {user.email}
-                </td>
+</thead>
 
-                {/* ROLE */}
-                <td className="p-5">
+<tbody>
 
-                  <span
-                    className={`px-4 py-1 rounded-full text-sm font-medium ${
-                      user.role ===
-                      "ADMIN"
-                        ? "bg-purple-100 text-purple-700"
-                        : user.role ===
-                          "MANAGER"
-                        ? "bg-yellow-100 text-yellow-700"
-                        : user.role ===
-                          "FINANCE"
-                        ? "bg-green-100 text-green-700"
-                        : "bg-blue-100 text-blue-700"
-                    }`}
-                  >
+  {users.map((user) => (
 
-                    {user.role}
+    <tr
+      key={user.id}
+      className="border-t border-slate-100 hover:bg-slate-50 transition"
+    >
 
-                  </span>
+      {/* USER */}
+      <td className="p-5 text-center">
 
-                </td>
+        <div className="flex flex-col items-center justify-center">
 
-                {/* DEPARTMENT */}
-                <td className="p-5 text-slate-700 font-medium">
-                  {user.department}
-                </td>
+          <h3 className="font-bold text-slate-800 text-lg">
 
-                {/* STATUS */}
-                <td className="p-5">
+            {user.name}
 
-                  {user.active ? (
+          </h3>
 
-                    <span className="bg-green-100 text-green-700 px-4 py-1 rounded-full text-sm font-medium">
-                      Active
-                    </span>
+          <p className="text-sm text-slate-400 mt-1">
 
-                  ) : (
+            User ID: {user.id}
 
-                    <span className="bg-red-100 text-red-700 px-4 py-1 rounded-full text-sm font-medium">
-                      Disabled
-                    </span>
+          </p>
 
-                  )}
+        </div>
 
-                </td>
+      </td>
 
-                {/* ACTIONS */}
-                <td className="p-5">
+      {/* EMAIL */}
+      <td className="p-5 text-center">
 
-                  {user.email !==
-                    "admin@test.com" && (
+        <div className="flex items-center justify-center gap-3 text-slate-600">
 
-                    <div className="flex gap-3">
+          <FaEnvelope className="text-slate-400" />
 
-                      {/* EDIT */}
-                      <button
-                        onClick={() => {
+          {user.email}
 
-                          setSelectedUser(
-                            user
-                          );
+        </div>
 
-                          setShowEditModal(
-                            true
-                          );
-                        }}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl transition font-medium"
-                      >
-                        Edit
-                      </button>
+      </td>
 
-                      {/* DELETE */}
-                      <button
-                        onClick={() => {
+      {/* ROLE */}
+      <td className="p-5 text-center">
 
-                          const confirmDelete =
-                            window.confirm(
-                              "Are you sure you want to permanently delete this user?"
-                            );
+        <div className="flex justify-center">
 
-                          if (
-                            confirmDelete
-                          ) {
+          <span
+            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              user.role === "ADMIN"
+                ? "bg-purple-100 text-purple-700"
+                : user.role === "MANAGER"
+                ? "bg-yellow-100 text-yellow-700"
+                : user.role === "FINANCE"
+                ? "bg-green-100 text-green-700"
+                : "bg-blue-100 text-blue-700"
+            }`}
+          >
 
-                            handleDelete(
-                              user.id
-                            );
-                          }
-                        }}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition font-medium"
-                      >
-                        Delete
-                      </button>
+            {user.role}
 
-                    </div>
+          </span>
 
-                  )}
+        </div>
 
-                </td>
+      </td>
 
-              </tr>
-            ))}
+      {/* DEPARTMENT */}
+      <td className="p-5 text-center">
 
-          </tbody>
+        <div className="flex items-center justify-center gap-3 text-slate-700 font-medium">
 
-        </table>
+          <FaBuilding className="text-slate-400" />
+
+          {user.department}
+
+        </div>
+
+      </td>
+
+      {/* STATUS */}
+      <td className="p-5 text-center">
+
+        <div className="flex justify-center">
+
+          <button
+            onClick={async () => {
+
+              try {
+
+                await toggleUserStatus(
+                  user.id
+                ).unwrap();
+
+                toast.success(
+                  `User ${
+                    user.active
+                      ? "disabled"
+                      : "activated"
+                  } successfully`
+                );
+
+              } catch {
+
+                toast.error(
+                  "Failed to update status"
+                );
+              }
+            }}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
+              user.active
+                ? "bg-green-100 text-green-700 hover:bg-green-200"
+                : "bg-red-100 text-red-700 hover:bg-red-200"
+            }`}
+          >
+
+            {user.active
+              ? "Active"
+              : "Disabled"}
+
+          </button>
+
+        </div>
+
+      </td>
+
+      {/* ACTIONS */}
+      <td className="p-5 text-center">
+
+        {user.email !==
+          "admin@test.com" && (
+
+          <div className="flex justify-center gap-3">
+
+            <button
+              onClick={() => {
+
+                const confirmDelete =
+                  window.confirm(
+                    "Are you sure you want to permanently delete this user?"
+                  );
+
+                if (
+                  confirmDelete
+                ) {
+
+                  handleDelete(
+                    user.id
+                  );
+                }
+              }}
+              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl transition font-medium"
+            >
+
+              <FaTrash />
+
+              Delete
+
+            </button>
+
+          </div>
+
+        )}
+
+      </td>
+
+    </tr>
+  ))}
+
+</tbody>
+
+          </table>
+
+        </div>
 
       </div>
 
-      {/* ADD USER MODAL */}
+      {/* ================= ADD USER MODAL ================= */}
       {showModal && (
 
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
 
           <div className="bg-white w-full max-w-2xl rounded-3xl shadow-2xl p-8 relative border border-slate-200">
 
-            {/* CLOSE */}
             <button
               onClick={() =>
                 setShowModal(false)
               }
               className="absolute top-5 right-5 text-2xl text-gray-400 hover:text-red-500 transition"
             >
+
               ✕
+
             </button>
 
-            {/* TITLE */}
             <div className="mb-6">
 
               <h2 className="text-3xl font-bold text-slate-800">
+
                 Create New User
+
               </h2>
 
               <p className="text-gray-500 mt-2">
-                Add new users to the
-                travel management system
+
+                Add new users to the travel management system
+
               </p>
 
             </div>
 
-            {/* FORM */}
             <AddUserModal
               closeModal={() =>
                 setShowModal(false)
@@ -422,26 +612,7 @@ const UserManagement = () => {
 
       )}
 
-      {/* EDIT USER MODAL */}
-      {showEditModal &&
-        selectedUser && (
-
-          <EditUserModal
-
-            user={selectedUser}
-
-            closeModal={() => {
-
-              setShowEditModal(
-                false
-              );
-
-              setSelectedUser(
-                null
-              );
-            }}
-          />
-        )}
+      
 
     </div>
   );

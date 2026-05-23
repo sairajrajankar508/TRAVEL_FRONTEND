@@ -48,12 +48,13 @@ export const adminApi = createApi({
     }),
 
     toggleUserStatus: builder.mutation({
-      query: (id) => ({
-        url: `/admin/users/toggle/${id}`,
-        method: "PUT",
-      }),
-      invalidatesTags: ["Users"],
-    }),
+  query: (id) => ({
+    url: `/admin/users/${id}/toggle-status`,
+    method: "PUT",
+  }),
+
+  invalidatesTags: ["Users"],
+}),
 
     // DEPARTMENT
     getDepartments: builder.query({
@@ -133,11 +134,9 @@ deletePolicy: builder.mutation({
 
     // AUDIT
     getAuditLogs: builder.query({
-
-  query: () => "/audit/logs",
-
-  providesTags: ["Audit"],
+  query: () => "audit/logs",
 }),
+
   }),
 });
 
@@ -155,7 +154,6 @@ export const {
   useCreatePolicyMutation,
   useGetPoliciesQuery,
   useTogglePolicyMutation,
-
   useGetAuditLogsQuery,
 
 } = adminApi;
