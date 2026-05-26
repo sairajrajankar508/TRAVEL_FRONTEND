@@ -74,7 +74,7 @@ const AddUserModal = ({
       <div className="w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-white/80 backdrop-blur-xl">
 
         {/* HEADER */}
-        <div className="bg-gradient-to-r from-cyan-600 to-blue-700 px-8 py-6 text-white">
+        <div className="bg-linear-to-r from-cyan-600 to-blue-700 px-8 py-6 text-white">
 
           <div className="flex justify-between items-center">
 
@@ -276,7 +276,7 @@ const AddUserModal = ({
 
             <button
               type="submit"
-              className="px-8 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-700 text-white font-semibold shadow-lg hover:scale-105 transition"
+              className="px-8 py-3 rounded-xl bg-linear-to-r from-cyan-600 to-blue-700 text-white font-semibold shadow-lg hover:scale-105 transition"
             >
               Create User
             </button>

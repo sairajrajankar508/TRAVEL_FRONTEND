@@ -1,140 +1,323 @@
-import { Link, useLocation } from "react-router-dom";
+// import { Link, useLocation } from "react-router-dom";
+
+// import {
+
+//   FaChartBar,
+
+//   FaFileAlt,
+
+//   FaWallet,
+
+//   FaUser,
+
+// } from "react-icons/fa";
+
+// const EmployeeSidebar = () => {
+
+//   const location =
+//     useLocation();
+
+//   const isActive = (path) =>
+//     location.pathname === path;
+
+//   return (
+
+//     <div className="w-64 h-screen bg-gradient-to-b from-cyan-900 to-cyan-900 text-white shadow-2xl flex flex-col">
+
+//       {/* LOGO */}
+//       <div className="p-5 border-b border-cyan-800">
+
+//         <h1 className="text-2xl font-bold">
+//         Travel System
+//         </h1>
+
+//         <p className="text-xs text-cyan-200 mt-1">
+//           Employee Panel
+//         </p>
+
+//       </div>
+
+//       {/* MENU */}
+//       <div className="flex flex-col gap-2 p-4">
+
+//         {/* DASHBOARD */}
+//         <Link
+//           to="/employee/dashboard"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive(
+//               "/employee/dashboard"
+//             )
+//               ? "bg-cyan-600"
+//               : "hover:bg-cyan-800"
+//           }`}
+//         >
+
+//           <FaChartBar />
+
+//           Dashboard
+
+//         </Link>
+
+//         {/* MY REQUESTS */}
+//         <Link
+//           to="/employee/requests"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive(
+//               "/employee/requests"
+//             )
+//               ? "bg-cyan-600"
+//               : "hover:bg-cyan-800"
+//           }`}
+//         >
+
+//           <FaFileAlt />
+
+//           My Requests
+
+//         </Link>
+
+//         <Link
+//           to="/employee/itinerary/:requestId"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive(
+//               "/employee/itinerary/:requestId"
+//             )
+//               ? "bg-cyan-600"
+//               : "hover:bg-cyan-800"
+//           }`}
+//         >
+
+//           <FaFileAlt />
+
+//           Itinerary
+
+//         </Link>
+
+//         {/* EXPENSES */}
+//         <Link
+//           to="/employee/expenses"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive(
+//               "/employee/expenses"
+//             )
+//               ? "bg-cyan-600"
+//               : "hover:bg-cyan-800"
+//           }`}
+//         >
+
+//           <FaWallet />
+
+//           Expenses
+
+//         </Link>
+
+//         {/* PROFILE */}
+//         <Link
+//           to="/employee/profile"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive(
+//               "/employee/profile"
+//             )
+//               ? "bg-cyan-600"
+//               : "hover:bg-cyan-800"
+//           }`}
+//         >
+
+//           <FaUser />
+
+//           Profile
+
+//         </Link>
+
+//       </div>
+
+      
+//     </div>
+
+//   );
+// };
+
+// export default EmployeeSidebar;
+
+
+
 
 import {
+    LayoutDashboard,
+    FilePlus2,
+    FileText,
+    MapPinned,
+    Receipt,
+    User,
+} from "lucide-react";
 
-  FaChartBar,
-
-  FaFileAlt,
-
-  FaWallet,
-
-  FaUser,
-
-} from "react-icons/fa";
+import { NavLink } from "react-router-dom";
 
 const EmployeeSidebar = () => {
 
-  const location =
-    useLocation();
+    // ==========================================
+    // MENU ITEMS
+    // ==========================================
 
-  const isActive = (path) =>
-    location.pathname === path;
+    const menuItems = [
 
-  return (
+        {
+            title: "Dashboard",
+            icon: <LayoutDashboard size={20} />,
+            path: "/employee/dashboard",
+        },
 
-    <div className="w-64 h-screen bg-gradient-to-b from-cyan-900 to-cyan-900 text-white shadow-2xl flex flex-col">
+        {
+            title: "Create Request",
+            icon: <FilePlus2 size={20} />,
+            path: "/employee/create-request",
+        },
 
-      {/* LOGO */}
-      <div className="p-5 border-b border-cyan-800">
+        {
+            title: "My Requests",
+            icon: <FileText size={20} />,
+            path: "/employee/requests",
+        },
 
-        <h1 className="text-2xl font-bold">
-        Travel System
-        </h1>
+        {
+            title: "Itinerary",
+            icon: <MapPinned size={20} />,
+            path: "/employee/itinerary",
+        },
 
-        <p className="text-xs text-cyan-200 mt-1">
-          Employee Panel
-        </p>
+        {
+            title: "Expenses",
+            icon: <Receipt size={20} />,
+            path: "/employee/expenses",
+        },
 
-      </div>
+        {
+            title: "Profile",
+            icon: <User size={20} />,
+            path: "/employee/profile",
+        },
+    ];
 
-      {/* MENU */}
-      <div className="flex flex-col gap-2 p-4">
+    return (
 
-        {/* DASHBOARD */}
-        <Link
-          to="/employee/dashboard"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive(
-              "/employee/dashboard"
-            )
-              ? "bg-cyan-600"
-              : "hover:bg-cyan-800"
-          }`}
+        <div
+            className="
+                h-screen
+                flex
+                flex-col
+                bg-gray-900
+                text-white
+                shadow-2xl
+            "
         >
 
-          <FaChartBar />
+            {/* ========================================== */}
+            {/* HEADER */}
+            {/* ========================================== */}
 
-          Dashboard
+            <div
+                className="
+                    px-6
+                    py-5
+                    border-b
+                    border-gray-800
+                "
+            >
 
-        </Link>
+                <h1
+                    className="
+                        text-2xl
+                        font-extrabold
+                        tracking-wide
+                        text-green-400
+                    "
+                >
+                    Employee
+                </h1>
 
-        {/* MY REQUESTS */}
-        <Link
-          to="/employee/requests"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive(
-              "/employee/requests"
-            )
-              ? "bg-cyan-600"
-              : "hover:bg-cyan-800"
-          }`}
-        >
+                <p className="text-sm text-gray-400 mt-1">
+                    Travel Portal
+                </p>
 
-          <FaFileAlt />
+            </div>
 
-          My Requests
+            {/* ========================================== */}
+            {/* MENU */}
+            {/* ========================================== */}
 
-        </Link>
+            <nav
+                className="
+                    flex-1
+                    px-3
+                    py-5
+                    space-y-2
+                    overflow-y-auto
+                "
+            >
 
-        <Link
-          to="/employee/itinerary/:requestId"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive(
-              "/employee/itinerary/:requestId"
-            )
-              ? "bg-cyan-600"
-              : "hover:bg-cyan-800"
-          }`}
-        >
+                {menuItems.map((item) => (
 
-          <FaFileAlt />
+                    <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) =>
 
-          Itinerary
+                            `
+                                flex
+                                items-center
+                                gap-3
+                                px-4
+                                py-3
+                                rounded-xl
+                                transition-all
+                                duration-200
+                                font-medium
+                                ${
+                                    isActive
+                                        ? "bg-green-600 text-white shadow-md"
+                                        : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                }
+                            `
+                        }
+                    >
 
-        </Link>
+                        {item.icon}
 
-        {/* EXPENSES */}
-        <Link
-          to="/employee/expenses"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive(
-              "/employee/expenses"
-            )
-              ? "bg-cyan-600"
-              : "hover:bg-cyan-800"
-          }`}
-        >
+                        <span>
+                            {item.title}
+                        </span>
 
-          <FaWallet />
+                    </NavLink>
+                ))}
 
-          Expenses
+            </nav>
 
-        </Link>
+            {/* ========================================== */}
+            {/* FOOTER */}
+            {/* ========================================== */}
 
-        {/* PROFILE */}
-        <Link
-          to="/employee/profile"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive(
-              "/employee/profile"
-            )
-              ? "bg-cyan-600"
-              : "hover:bg-cyan-800"
-          }`}
-        >
+            <div
+                className="
+                    p-4
+                    border-t
+                    border-gray-800
+                    text-sm
+                    text-gray-400
+                "
+            >
 
-          <FaUser />
+                <p>
+                    Employee Travel Workspace
+                </p>
 
-          Profile
+                <p className="mt-1">
+                    Request & Expense Management
+                </p>
 
-        </Link>
+            </div>
 
-      </div>
-
-      
-    </div>
-
-  );
+        </div>
+    );
 };
 
 export default EmployeeSidebar;

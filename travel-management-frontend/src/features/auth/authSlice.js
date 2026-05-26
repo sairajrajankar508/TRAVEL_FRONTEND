@@ -1,66 +1,282 @@
-import { createSlice } from "@reduxjs/toolkit";
+// import { createSlice } from "@reduxjs/toolkit";
+
+// const initialState = {
+//   token: localStorage.getItem("token") || null,
+//   role: localStorage.getItem("role") || null,
+//   email: localStorage.getItem("email") || null, // 🔥 NEW (useful for profile/dashboard)
+// };
+
+// const authSlice = createSlice({
+//   name: "auth",
+
+//   initialState,
+
+//   reducers: {
+
+//     // ================= LOGIN SUCCESS =================
+//     setCredentials: (state, action) => {
+
+//       const { token, role, email } = action.payload;
+
+//       state.token = token;
+//       state.role = role;
+//       state.email = email || null;
+
+//       if (token) {
+//         localStorage.setItem("token", token);
+//       }
+
+//       if (role) {
+//         localStorage.setItem("role", role);
+//       }
+
+//       if (email) {
+//         localStorage.setItem("email", email);
+//       }
+//     },
+
+//     // ================= LOGOUT =================
+//     logout: (state) => {
+
+//       state.token = null;
+//       state.role = null;
+//       state.email = null;
+
+//       localStorage.removeItem("token");
+//       localStorage.removeItem("role");
+//       localStorage.removeItem("email");
+//     },
+
+//     // ================= RESTORE SESSION =================
+//     restoreSession: (state) => {
+
+//       state.token = localStorage.getItem("token");
+//       state.role = localStorage.getItem("role");
+//       state.email = localStorage.getItem("email");
+//     },
+//   },
+// });
+
+// export const {
+//   setCredentials,
+//   logout,
+//   restoreSession
+// } = authSlice.actions;
+
+// export default authSlice.reducer;
+
+
+
+import {
+    createSlice,
+    createAsyncThunk,
+} from "@reduxjs/toolkit";
+
+import apiClient from "../../services/apiClient";
+
+// ==========================================
+// LOGIN THUNK
+// ==========================================
+
+export const loginUser = createAsyncThunk(
+
+    "auth/loginUser",
+
+    async (credentials, { rejectWithValue }) => {
+
+        try {
+
+            const response =
+                await apiClient.post(
+                    "/auth/login",
+                    credentials
+                );
+
+            return response.data;
+
+        } catch (error) {
+
+            return rejectWithValue(
+
+                error.response?.data?.message ||
+
+                error.response?.data ||
+
+                "Login failed"
+            );
+        }
+    }
+);
+
+// ==========================================
+// INITIAL STATE
+// ==========================================
 
 const initialState = {
-  token: localStorage.getItem("token") || null,
-  role: localStorage.getItem("role") || null,
-  email: localStorage.getItem("email") || null, // 🔥 NEW (useful for profile/dashboard)
+
+    user: JSON.parse(
+        localStorage.getItem("user")
+    ) || null,
+
+    token:
+        localStorage.getItem("token") || null,
+
+    role:
+        localStorage.getItem("role") || null,
+
+    loading: false,
+
+    error: null,
 };
 
+// ==========================================
+// AUTH SLICE
+// ==========================================
+
 const authSlice = createSlice({
-  name: "auth",
 
-  initialState,
+    name: "auth",
 
-  reducers: {
+    initialState,
 
-    // ================= LOGIN SUCCESS =================
-    setCredentials: (state, action) => {
+    reducers: {
 
-      const { token, role, email } = action.payload;
+        // ======================================
+        // LOGOUT
+        // ======================================
 
-      state.token = token;
-      state.role = role;
-      state.email = email || null;
+        logout: (state) => {
 
-      if (token) {
-        localStorage.setItem("token", token);
-      }
+            state.user = null;
 
-      if (role) {
-        localStorage.setItem("role", role);
-      }
+            state.token = null;
 
-      if (email) {
-        localStorage.setItem("email", email);
-      }
+            state.role = null;
+
+            state.loading = false;
+
+            state.error = null;
+
+            // CLEAR STORAGE
+
+            localStorage.removeItem("token");
+
+            localStorage.removeItem("role");
+
+            localStorage.removeItem("user");
+        },
+
+        // ======================================
+        // CLEAR ERROR
+        // ======================================
+
+        clearAuthError: (state) => {
+
+            state.error = null;
+        },
     },
 
-    // ================= LOGOUT =================
-    logout: (state) => {
+    // ==========================================
+    // EXTRA REDUCERS
+    // ==========================================
 
-      state.token = null;
-      state.role = null;
-      state.email = null;
+    extraReducers: (builder) => {
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-      localStorage.removeItem("email");
+        builder
+
+            // ==================================
+            // LOGIN PENDING
+            // ==================================
+
+            .addCase(
+                loginUser.pending,
+
+                (state) => {
+
+                    state.loading = true;
+
+                    state.error = null;
+                }
+            )
+
+            // ==================================
+            // LOGIN SUCCESS
+            // ==================================
+
+            .addCase(
+                loginUser.fulfilled,
+
+                (state, action) => {
+
+                    state.loading = false;
+
+                    state.token =
+                        action.payload.token;
+
+                    state.role =
+                        action.payload.role;
+
+                    state.user = {
+
+                        email:
+                            action.payload.email,
+
+                        name:
+                            action.payload.name,
+                    };
+
+                    // ==========================
+                    // SAVE TO LOCAL STORAGE
+                    // ==========================
+
+                    localStorage.setItem(
+                        "token",
+                        action.payload.token
+                    );
+
+                    localStorage.setItem(
+                        "role",
+                        action.payload.role
+                    );
+
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(state.user)
+                    );
+                }
+            )
+
+            // ==================================
+            // LOGIN FAILED
+            // ==================================
+
+            .addCase(
+                loginUser.rejected,
+
+                (state, action) => {
+
+                    state.loading = false;
+
+                    state.error = action.payload;
+                }
+            );
     },
-
-    // ================= RESTORE SESSION =================
-    restoreSession: (state) => {
-
-      state.token = localStorage.getItem("token");
-      state.role = localStorage.getItem("role");
-      state.email = localStorage.getItem("email");
-    },
-  },
 });
 
+// ==========================================
+// EXPORT ACTIONS
+// ==========================================
+
 export const {
-  setCredentials,
-  logout,
-  restoreSession
+
+    logout,
+
+    clearAuthError,
+
 } = authSlice.actions;
+
+// ==========================================
+// EXPORT REDUCER
+// ==========================================
 
 export default authSlice.reducer;

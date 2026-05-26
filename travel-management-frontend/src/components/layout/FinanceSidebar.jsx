@@ -1,154 +1,345 @@
-import { Link, useLocation } from "react-router-dom";
+// import { Link, useLocation } from "react-router-dom";
+
+// import {
+//   FaChartBar,
+//   FaMoneyBillWave,
+//   FaFileInvoice,
+//   FaCheckCircle,
+//   FaHistory,
+//   FaUser,
+// } from "react-icons/fa";
+
+// const FinanceSidebar = () => {
+
+//   const location = useLocation();
+
+//   const isActive = (path) =>
+//     location.pathname === path;
+
+//   return (
+
+//     <div className="w-64 h-screen bg-gradient-to-b from-green-900 to-green-900 text-white shadow-2xl flex flex-col">
+
+//       {/* ================= HEADER ================= */}
+//       <div className="p-5 border-b border-green-700">
+
+//         <h1 className="text-2xl font-bold">
+
+//           Travel System
+
+//         </h1>
+
+//         <p className="text-xs text-green-200 mt-1">
+
+//           Finance Panel
+
+//         </p>
+
+//       </div>
+
+//       {/* ================= MENU ================= */}
+//       <div className="flex flex-col gap-2 p-4">
+
+//         {/* DASHBOARD */}
+//         <Link
+//           to="/finance/dashboard"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/dashboard")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaChartBar />
+
+//           Dashboard
+
+//         </Link>
+
+//         {/* EXPENSE APPROVALS */}
+//         <Link
+//           to="/finance/expenses"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/expenses")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaMoneyBillWave />
+
+//           Expense Approvals
+
+//         </Link>
+
+//         {/* REIMBURSEMENTS */}
+//         <Link
+//           to="/finance/reimbursements"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/reimbursements")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaCheckCircle />
+
+//           Reimbursements
+
+//         </Link>
+
+        
+//         {/* PAYMENT HISTORY */}
+//         <Link
+//           to="/finance/history"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/history")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaHistory />
+
+//           Payment History
+
+//         </Link>
+
+//         {/* REPORTS */}
+//         <Link
+//           to="/finance/reports"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/reports")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaFileInvoice />
+
+//           Reports
+
+//         </Link>
+
+//         {/* PROFILE */}
+//         <Link
+//           to="/finance/profile"
+//           className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
+//             isActive("/finance/profile")
+//               ? "bg-green-600"
+//               : "hover:bg-green-700"
+//           }`}
+//         >
+
+//           <FaUser />
+
+//           Profile
+
+//         </Link>
+
+//       </div>
+
+//       {/* ================= FOOTER ================= */}
+//       <div className="mt-auto p-4 border-t border-green-700 text-xs text-green-200">
+
+//         v1.0 • Finance Module
+
+//       </div>
+
+//     </div>
+
+//   );
+// };
+
+// export default FinanceSidebar;
+
+
+
+
 
 import {
-  FaChartBar,
-  FaMoneyBillWave,
-  FaFileInvoice,
-  FaCheckCircle,
-  FaHistory,
-  FaUser,
-} from "react-icons/fa";
+    LayoutDashboard,
+    Receipt,
+    Wallet,
+    CreditCard,
+    FileBarChart2,
+    ShieldCheck,
+    User,
+} from "lucide-react";
+
+import { NavLink } from "react-router-dom";
 
 const FinanceSidebar = () => {
 
-  const location = useLocation();
+    // ==========================================
+    // MENU ITEMS
+    // ==========================================
 
-  const isActive = (path) =>
-    location.pathname === path;
+    const menuItems = [
 
-  return (
+        {
+            title: "Dashboard",
+            icon: <LayoutDashboard size={20} />,
+            path: "/finance/dashboard",
+        },
 
-    <div className="w-64 h-screen bg-gradient-to-b from-green-900 to-green-900 text-white shadow-2xl flex flex-col">
+        {
+            title: "Expense Reviews",
+            icon: <Receipt size={20} />,
+            path: "/finance/expense-reviews",
+        },
 
-      {/* ================= HEADER ================= */}
-      <div className="p-5 border-b border-green-700">
+        {
+            title: "Reimbursements",
+            icon: <Wallet size={20} />,
+            path: "/finance/reimbursements",
+        },
 
-        <h1 className="text-2xl font-bold">
+        {
+            title: "Payment History",
+            icon: <CreditCard size={20} />,
+            path: "/finance/payment-history",
+        },
 
-          Travel System
+        {
+            title: "Financial Reports",
+            icon: <FileBarChart2 size={20} />,
+            path: "/finance/reports",
+        },
 
-        </h1>
+        {
+            title: "Audit & Verification",
+            icon: <ShieldCheck size={20} />,
+            path: "/finance/audit",
+        },
 
-        <p className="text-xs text-green-200 mt-1">
+        {
+            title: "Profile",
+            icon: <User size={20} />,
+            path: "/finance/profile",
+        },
+    ];
 
-          Finance Panel
+    return (
 
-        </p>
-
-      </div>
-
-      {/* ================= MENU ================= */}
-      <div className="flex flex-col gap-2 p-4">
-
-        {/* DASHBOARD */}
-        <Link
-          to="/finance/dashboard"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/dashboard")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
+        <div
+            className="
+                h-screen
+                flex
+                flex-col
+                bg-gray-900
+                text-white
+                shadow-2xl
+            "
         >
 
-          <FaChartBar />
+            {/* ========================================== */}
+            {/* HEADER */}
+            {/* ========================================== */}
 
-          Dashboard
+            <div
+                className="
+                    px-6
+                    py-5
+                    border-b
+                    border-gray-800
+                "
+            >
 
-        </Link>
+                <h1
+                    className="
+                        text-2xl
+                        font-extrabold
+                        tracking-wide
+                        text-yellow-400
+                    "
+                >
+                    Finance
+                </h1>
 
-        {/* EXPENSE APPROVALS */}
-        <Link
-          to="/finance/expenses"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/expenses")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
-        >
+                <p className="text-sm text-gray-400 mt-1">
+                    Financial Control Workspace
+                </p>
 
-          <FaMoneyBillWave />
+            </div>
 
-          Expense Approvals
+            {/* ========================================== */}
+            {/* MENU */}
+            {/* ========================================== */}
 
-        </Link>
+            <nav
+                className="
+                    flex-1
+                    px-3
+                    py-5
+                    space-y-2
+                    overflow-y-auto
+                "
+            >
 
-        {/* REIMBURSEMENTS */}
-        <Link
-          to="/finance/reimbursements"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/reimbursements")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
-        >
+                {menuItems.map((item) => (
 
-          <FaCheckCircle />
+                    <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) =>
 
-          Reimbursements
+                            `
+                                flex
+                                items-center
+                                gap-3
+                                px-4
+                                py-3
+                                rounded-xl
+                                transition-all
+                                duration-200
+                                font-medium
+                                ${
+                                    isActive
+                                        ? "bg-yellow-400 text-black shadow-md"
+                                        : "text-gray-300 hover:bg-gray-800 hover:text-white"
+                                }
+                            `
+                        }
+                    >
 
-        </Link>
+                        {item.icon}
 
-        
-        {/* PAYMENT HISTORY */}
-        <Link
-          to="/finance/history"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/history")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
-        >
+                        <span>
+                            {item.title}
+                        </span>
 
-          <FaHistory />
+                    </NavLink>
+                ))}
 
-          Payment History
+            </nav>
 
-        </Link>
+            {/* ========================================== */}
+            {/* FOOTER */}
+            {/* ========================================== */}
 
-        {/* REPORTS */}
-        <Link
-          to="/finance/reports"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/reports")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
-        >
+            <div
+                className="
+                    p-4
+                    border-t
+                    border-gray-800
+                    text-sm
+                    text-gray-400
+                "
+            >
 
-          <FaFileInvoice />
+                <p>
+                    Finance Management Console
+                </p>
 
-          Reports
+                <p className="mt-1">
+                    Expense & Reimbursement Monitoring
+                </p>
 
-        </Link>
+            </div>
 
-        {/* PROFILE */}
-        <Link
-          to="/finance/profile"
-          className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${
-            isActive("/finance/profile")
-              ? "bg-green-600"
-              : "hover:bg-green-700"
-          }`}
-        >
-
-          <FaUser />
-
-          Profile
-
-        </Link>
-
-      </div>
-
-      {/* ================= FOOTER ================= */}
-      <div className="mt-auto p-4 border-t border-green-700 text-xs text-green-200">
-
-        v1.0 • Finance Module
-
-      </div>
-
-    </div>
-
-  );
+        </div>
+    );
 };
 
 export default FinanceSidebar;
