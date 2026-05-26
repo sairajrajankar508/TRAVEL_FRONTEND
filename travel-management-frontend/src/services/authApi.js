@@ -1,43 +1,60 @@
-import {
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-  createApi,
+const baseQuery = fetchBaseQuery({
+  baseUrl: "http://localhost:8080",
 
-  fetchBaseQuery,
+  // 🔥 AUTO ATTACH TOKEN (IMPORTANT FIX)
+  prepareHeaders: (headers) => {
+    const token = localStorage.getItem("token");
 
-} from "@reduxjs/toolkit/query/react";
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
 
-export const authApi =
-  createApi({
+    headers.set("Content-Type", "application/json");
 
-    reducerPath: "authApi",
+    return headers;
+  },
+});
 
-    baseQuery:
-      fetchBaseQuery({
+export const authApi = createApi({
+  reducerPath: "authApi",
 
-        baseUrl:
-          "http://localhost:8080",
+  baseQuery,
+
+  tagTypes: ["Auth"],
+
+  endpoints: (builder) => ({
+
+    // ================= LOGIN =================
+    login: builder.mutation({
+      query: (credentials) => ({
+        url: "/auth/login",
+        method: "POST",
+        body: credentials,
       }),
-
-    endpoints: (builder) => ({
-
-      // LOGIN API
-      login:
-        builder.mutation({
-
-          query: (
-            credentials
-          ) => ({
-
-            url: "/auth/login",
-
-            method: "POST",
-
-            body: credentials,
-          }),
-        }),
     }),
-  });
+
+    // ================= OPTIONAL: PROFILE =================
+    getProfile: builder.query({
+      query: () => "/employee/profile",
+      providesTags: ["Auth"],
+    }),
+
+    // ================= OPTIONAL: UPDATE PROFILE =================
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: "/employee/profile/update",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Auth"],
+    }),
+  }),
+});
 
 export const {
   useLoginMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
 } = authApi;

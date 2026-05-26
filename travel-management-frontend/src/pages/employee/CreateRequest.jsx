@@ -2,104 +2,76 @@ import { useState } from "react";
 
 const CreateRequest = ({ closeModal }) => {
 
-  const token =
-    localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-  const [form, setForm] =
-    useState({
+  const [form, setForm] = useState({
+    destination: "",
+    purpose: "",
+    travelDate: "",
+    returnDate: "",
+    estimatedCost: "",
+    travelMode: "FLIGHT",
+    hotelRequired: false,
+    description: "",
+  });
 
-      destination: "",
+  const [loading, setLoading] = useState(false);
 
-      purpose: "",
-
-      travelDate: "",
-
-      returnDate: "",
-
-      estimatedCost: "",
-
-      travelMode: "FLIGHT",
-
-      hotelRequired: false,
-
-      description: "",
-    });
-
-  const [loading, setLoading] =
-    useState(false);
-
-  // HANDLE CHANGE
+  // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
 
-    const { name, value, type, checked } =
-      e.target;
-
-    setForm({
-
-      ...form,
-
-      [name]:
-        type === "checkbox"
-          ? checked
-          : value,
-    });
+    setForm((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  // SUBMIT REQUEST
+  // ================= SUBMIT REQUEST =================
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     setLoading(true);
 
     try {
+      const payload = {
+        source: "AUTO", // 🔥 backend safe default
+        destination: form.destination,
+        purpose: form.purpose,
+        startDate: form.travelDate,
+        endDate: form.returnDate,
+        budget: form.estimatedCost ? Number(form.estimatedCost) : 0,
+        transportMode: form.travelMode,
+        accommodation: form.hotelRequired,
+        description: form.description,
+      };
 
       const res = await fetch(
-
         "http://localhost:8080/employee/request",
-
         {
-
           method: "POST",
-
           headers: {
-
-            "Content-Type":
-              "application/json",
-
-            Authorization:
-              `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-
-          body: JSON.stringify({
-            ...form,
-            status: "SUBMITTED",
-          }),
+          body: JSON.stringify(payload),
         }
-
       );
 
-      if (!res.ok)
-        throw new Error(
-          "Failed"
-        );
+      const data = await res.text();
 
-      alert(
-        "Travel request submitted successfully"
-      );
+      if (!res.ok) {
+        throw new Error(data || "Failed to submit request");
+      }
+
+      alert("✈️ Travel request submitted successfully");
 
       closeModal();
 
     } catch (err) {
-
-      console.log(err);
-
-      alert(
-        "Failed to submit request"
-      );
-
+      console.error(err);
+      alert("❌ Failed to submit request");
     } finally {
-
       setLoading(false);
     }
   };
@@ -115,25 +87,15 @@ const CreateRequest = ({ closeModal }) => {
         <div className="bg-gradient-to-r from-cyan-600 to-blue-600 p-6 text-white flex justify-between">
 
           <div>
-
             <h2 className="text-2xl font-bold">
-
               ✈️ Create Travel Request
-
             </h2>
-
             <p className="text-sm opacity-80">
-
               Submit your travel plan for approval
-
             </p>
-
           </div>
 
-          <button
-            onClick={closeModal}
-            className="text-white text-2xl"
-          >
+          <button onClick={closeModal} className="text-white text-2xl">
             ×
           </button>
 
@@ -145,7 +107,6 @@ const CreateRequest = ({ closeModal }) => {
           className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4"
         >
 
-          {/* DESTINATION */}
           <input
             type="text"
             name="destination"
@@ -156,7 +117,6 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl"
           />
 
-          {/* PURPOSE */}
           <input
             type="text"
             name="purpose"
@@ -167,7 +127,6 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl"
           />
 
-          {/* TRAVEL DATE */}
           <input
             type="date"
             name="travelDate"
@@ -177,7 +136,6 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl"
           />
 
-          {/* RETURN DATE */}
           <input
             type="date"
             name="returnDate"
@@ -187,7 +145,6 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl"
           />
 
-          {/* COST */}
           <input
             type="number"
             name="estimatedCost"
@@ -197,49 +154,27 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl"
           />
 
-          {/* TRAVEL MODE */}
           <select
             name="travelMode"
             value={form.travelMode}
             onChange={handleChange}
             className="border p-3 rounded-xl"
           >
-
-            <option value="FLIGHT">
-
-              Flight
-
-            </option>
-
-            <option value="TRAIN">
-
-              Train
-
-            </option>
-
-            <option value="BUS">
-
-              Bus
-
-            </option>
-
+            <option value="FLIGHT">Flight</option>
+            <option value="TRAIN">Train</option>
+            <option value="BUS">Bus</option>
           </select>
 
-          {/* HOTEL */}
           <label className="flex items-center gap-2">
-
             <input
               type="checkbox"
               name="hotelRequired"
               checked={form.hotelRequired}
               onChange={handleChange}
             />
-
             Hotel Required
-
           </label>
 
-          {/* DESCRIPTION */}
           <textarea
             name="description"
             placeholder="Description"
@@ -248,7 +183,6 @@ const CreateRequest = ({ closeModal }) => {
             className="border p-3 rounded-xl md:col-span-2"
           />
 
-          {/* BUTTONS */}
           <div className="md:col-span-2 flex justify-end gap-3">
 
             <button
@@ -256,9 +190,7 @@ const CreateRequest = ({ closeModal }) => {
               onClick={closeModal}
               className="px-5 py-2 border rounded-xl"
             >
-
               Cancel
-
             </button>
 
             <button
@@ -266,11 +198,7 @@ const CreateRequest = ({ closeModal }) => {
               disabled={loading}
               className="px-6 py-2 bg-cyan-600 text-white rounded-xl hover:bg-cyan-700"
             >
-
-              {loading
-                ? "Submitting..."
-                : "Submit Request"}
-
+              {loading ? "Submitting..." : "Submit Request"}
             </button>
 
           </div>
